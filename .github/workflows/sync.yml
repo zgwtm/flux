@@ -1,0 +1,73 @@
+name: Sync Rules
+
+on:
+  # 每天北京时间凌晨 04:00（UTC 20:00）自动运行
+  schedule:
+    - cron: "0 20 * * *"
+
+  # 手动触发（在 GitHub Actions 页面点 Run workflow）
+  workflow_dispatch:
+
+  # push 到 main 分支且修改了配置或自定义规则时也触发
+  push:
+    branches: [main]
+    paths:
+      - config.yaml
+      - 'rules/**/custom.list'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Download mihomo
+        timeout-minutes: 2
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          MIHOMO_VERSION=$(gh api repos/MetaCubeX/mihomo/releases/latest --jq '.tag_name')
+          echo "mihomo ${MIHOMO_VERSION}"
+          wget -q -T 30 -t 2 -O mihomo.gz \
+            "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
+          gunzip mihomo.gz
+          chmod +x mihomo
+          ./mihomo version
+
+      - name: Run sync
+        run: |
+          if [ -x ./mihomo ]; then
+            echo "mihomo found, will compile MRS"
+            export MIHOMO_BIN="${{ github.workspace }}/mihomo"
+          else
+            echo "mihomo not available, skipping MRS compilation"
+          fi
+          python scripts/sync.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "zgwtm"
+          git config user.email "510182810@qq.com"
+          git add rules/
+          git commit -m "sync: $(date -u '+%Y-%m-%d %H:%M') UTC [text+mrs]"
+          git push

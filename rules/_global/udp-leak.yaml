@@ -1,0 +1,12 @@
+# UDP 防泄露规则（Mihomo 专用版，支持 AND 精确匹配）
+# 拦截可能绕过代理暴露真实 IP 的 UDP 流量
+#
+# behavior: classical
+# 引用时指定策略：RULE-SET,udp-leak,REJECT
+payload:
+  # STUN/TURN 打洞（WebRTC 用来发现真实 IP）
+  - DST-PORT,3478
+  # QUIC（UDP 版 HTTPS，可能绕过代理）— 只封 UDP，不影响正常 HTTPS
+  - AND,((NETWORK,UDP),(DST-PORT,443))
+  # Google STUN 服务器
+  - DST-PORT,19302

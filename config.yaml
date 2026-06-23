@@ -1,0 +1,79 @@
+# ============================================
+# Mokka 酱的规则精选集
+# 改这里加规则，GitHub Actions 每天自动同步上游
+# ============================================
+
+# --- 上游数据源 ---
+upstream:
+  blackmatrix7:
+    repo: blackmatrix7/ios_rule_script
+    branch: master
+    # Loon 格式：rule/Loon/{name}/{name}.list
+    # Clash 格式：rule/Clash/{name}/{name}.yaml
+
+# --- 规则清单 ---
+# 每条规则需要指定：
+#   name:        规则名（也是输出文件名）
+#   description: 说明（给自己看的）
+#   upstream:    上游数据源名
+#   loon_path:   上游 Loon 格式路径
+#   clash_path:  上游 Clash 格式路径
+
+rules:
+  # ---- AI 服务（按服务商拆分，走不同节点）----
+
+  - name: OpenAI
+    description: ChatGPT / OpenAI API / DALL-E → 搬瓦工 DC9
+    upstream: blackmatrix7
+    loon_path: rule/Loon/OpenAI/OpenAI.list
+    clash_path: rule/Clash/OpenAI/OpenAI.yaml
+
+  - name: Claude
+    description: Anthropic Claude → GCP Oregon
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Claude/Claude.list
+    clash_path: rule/Clash/Claude/Claude.yaml
+
+  - name: Gemini
+    description: Google Gemini AI → 搬瓦工 DC9
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Gemini/Gemini.list
+    clash_path: rule/Clash/Gemini/Gemini.yaml
+
+  - name: Google
+    description: Google 通用服务 → 搬瓦工 DC9
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Google/Google.list
+    clash_path: rule/Clash/Google/Google.yaml
+
+  # ---- 待扩展（取消注释即可启用）----
+
+  # - name: Cryptocurrency
+  #   description: 加密货币交易所/行情
+  #   upstream: blackmatrix7
+  #   loon_path: rule/Loon/Crypto/Crypto.list
+  #   clash_path: rule/Clash/Crypto/Crypto.yaml
+
+  # - name: Telegram
+  #   description: Telegram 即时通讯
+  #   upstream: blackmatrix7
+  #   loon_path: rule/Loon/Telegram/Telegram.list
+  #   clash_path: rule/Clash/Telegram/Telegram.yaml
+
+  # - name: YouTube
+  #   description: YouTube 视频
+  #   upstream: blackmatrix7
+  #   loon_path: rule/Loon/YouTube/YouTube.list
+  #   clash_path: rule/Clash/YouTube/YouTube.yaml
+
+  # - name: Twitter
+  #   description: X / Twitter
+  #   upstream: blackmatrix7
+  #   loon_path: rule/Loon/Twitter/Twitter.list
+  #   clash_path: rule/Clash/Twitter/Twitter.yaml
+
+  # - name: GitHub
+  #   description: GitHub
+  #   upstream: blackmatrix7
+  #   loon_path: rule/Loon/GitHub/GitHub.list
+  #   clash_path: rule/Clash/GitHub/GitHub.yaml

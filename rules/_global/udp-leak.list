@@ -1,0 +1,9 @@
+# UDP 防泄露规则（通用版，Loon / Mihomo 都支持）
+# 拦截 STUN/TURN 打洞端口，防止 WebRTC 暴露真实 IP
+#
+# 引用时指定策略：RULE-SET,udp-leak,REJECT
+
+# STUN/TURN 打洞（WebRTC 用来发现真实 IP）
+DST-PORT,3478
+# Google STUN 服务器
+DST-PORT,19302
