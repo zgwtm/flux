@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """
 规则同步脚本
-从上游拉取规则 → 合并自定义补充 → 输出 .list / .yaml / .mrs 三种格式
+从上游拉取规则 → 合并自定义补充 → 输出 .list / .yaml 两种格式
 所有文件按规则名分文件夹：rules/{name}/
 """
 
 import os
 import sys
-import shutil
-import subprocess
 import yaml
 import hashlib
 import urllib.request
@@ -18,8 +16,6 @@ from datetime import datetime, timezone, timedelta
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_PATH = os.path.join(ROOT_DIR, "config.yaml")
 RULES_DIR = os.path.join(ROOT_DIR, "rules")
-
-MIHOMO_BIN = os.environ.get("MIHOMO_BIN", shutil.which("mihomo") or "mihomo")
 
 RAW_BASE = "https://raw.githubusercontent.com"
 
@@ -103,61 +99,6 @@ def append_custom_to_clash(clash_content, custom_rules):
     return clash_content.rstrip("\n") + "\n" + separator + custom_lines + "\n"
 
 
-MRS_UNSUPPORTED_PREFIXES = ("IP-ASN,", "DOMAIN-SET,", "URL-REGEX,", "USER-AGENT,")
-
-
-def strip_unsupported_for_mrs(clash_yaml_path):
-    with open(clash_yaml_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-
-    cleaned = []
-    stripped = 0
-    for line in lines:
-        content = line.strip().lstrip("- ").strip()
-        if any(content.startswith(p) for p in MRS_UNSUPPORTED_PREFIXES):
-            stripped += 1
-            continue
-        cleaned.append(line)
-
-    if stripped == 0:
-        return clash_yaml_path
-
-    tmp_path = clash_yaml_path + ".mrs_tmp"
-    with open(tmp_path, "w", encoding="utf-8") as f:
-        f.writelines(cleaned)
-    print(f"    stripped {stripped} unsupported rules for MRS")
-    return tmp_path
-
-
-def compile_mrs(clash_yaml_path, mrs_output_path, rule_name):
-    if not shutil.which(MIHOMO_BIN) and MIHOMO_BIN == "mihomo":
-        print(f"    mihomo not found, skip MRS")
-        return False
-
-    os.makedirs(os.path.dirname(mrs_output_path), exist_ok=True)
-    tmp_path = strip_unsupported_for_mrs(clash_yaml_path)
-    try:
-        subprocess.run(
-            [MIHOMO_BIN, "convert-ruleset", "classical", "yaml",
-             tmp_path, mrs_output_path],
-            check=True, capture_output=True, text=True, timeout=30,
-        )
-        print(f"    MRS ok")
-        return True
-    except FileNotFoundError:
-        print(f"    mihomo not found, skip MRS")
-        return False
-    except subprocess.CalledProcessError as e:
-        print(f"    MRS failed ({rule_name}): {e.stderr.strip()}")
-        return False
-    except subprocess.TimeoutExpired:
-        print(f"    MRS timeout ({rule_name})")
-        return False
-    finally:
-        if tmp_path != clash_yaml_path and os.path.exists(tmp_path):
-            os.remove(tmp_path)
-
-
 def sync_rules():
     config = load_config()
     upstream_configs = config.get("upstream", {})
@@ -167,7 +108,7 @@ def sync_rules():
         print("No rules in config.yaml")
         return
 
-    stats = {"updated": 0, "unchanged": 0, "failed": 0, "mrs_compiled": 0, "mrs_skipped": 0}
+    stats = {"updated": 0, "unchanged": 0, "failed": 0}
 
     print(f"Syncing {len(rules)} rules...")
     print("=" * 50)
@@ -214,7 +155,7 @@ def sync_rules():
             else:
                 stats["failed"] += 1
 
-        # Clash → rules/{name}/{name}.yaml
+        # Clash/Mihomo → rules/{name}/{name}.yaml
         clash_path = rule.get("clash_path")
         if clash_path:
             clash_url = build_raw_url(repo, branch, clash_path)
@@ -236,18 +177,9 @@ def sync_rules():
             else:
                 stats["failed"] += 1
 
-        # MRS → rules/{name}/{name}.mrs
-        clash_out = os.path.join(rule_dir, f"{name}.yaml")
-        if os.path.exists(clash_out):
-            mrs_out = os.path.join(rule_dir, f"{name}.mrs")
-            if compile_mrs(clash_out, mrs_out, name):
-                stats["mrs_compiled"] += 1
-            else:
-                stats["mrs_skipped"] += 1
-
     print(f"\n{'=' * 50}")
     print(f"Done! updated={stats['updated']} unchanged={stats['unchanged']} "
-          f"failed={stats['failed']} mrs={stats['mrs_compiled']}")
+          f"failed={stats['failed']}")
 
     if stats["failed"] > 0:
         sys.exit(1)

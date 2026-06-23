@@ -34,28 +34,8 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
-      - name: Download mihomo
-        timeout-minutes: 2
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          MIHOMO_VERSION=$(gh api repos/MetaCubeX/mihomo/releases/latest --jq '.tag_name')
-          echo "mihomo ${MIHOMO_VERSION}"
-          wget -q -T 30 -t 2 -O mihomo.gz \
-            "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
-          gunzip mihomo.gz
-          chmod +x mihomo
-
       - name: Run sync
-        run: |
-          if [ -x ./mihomo ]; then
-            echo "mihomo found, will compile MRS"
-            export MIHOMO_BIN="${{ github.workspace }}/mihomo"
-          else
-            echo "mihomo not available, skipping MRS compilation"
-          fi
-          python scripts/sync.py
+        run: python scripts/sync.py
 
       - name: Check for changes
         id: changes
@@ -68,6 +48,6 @@ jobs:
           git config user.name "zgwtm"
           git config user.email "510182810@qq.com"
           git add rules/
-          git commit -m "sync: $(date -u '+%Y-%m-%d %H:%M') UTC [text+mrs]"
+          git commit -m "sync: $(date -u '+%Y-%m-%d %H:%M') UTC"
           git pull --rebase origin main
           git push

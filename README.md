@@ -11,8 +11,7 @@ rules/
 ├── Claude/
 │   ├── custom.list      ← 自定义补充规则（编辑这个）
 │   ├── Claude.list      ← Loon 格式（自动生成）
-│   ├── Claude.yaml      ← Clash 文本格式（自动生成）
-│   └── Claude.mrs       ← Mihomo 二进制（自动生成）
+│   └── Claude.yaml      ← Clash/Mihomo 格式（自动生成）
 ├── OpenAI/
 │   └── ...
 └── _global/
@@ -27,7 +26,7 @@ rules/
 https://raw.githubusercontent.com/zgwtm/flux/main/rules/{RuleName}/{RuleName}.list
 ```
 
-### Clash / Mihomo — YAML
+### Clash / Mihomo
 
 ```yaml
 rule-providers:
@@ -36,19 +35,6 @@ rule-providers:
     behavior: classical
     url: "https://raw.githubusercontent.com/zgwtm/flux/main/rules/Claude/Claude.yaml"
     path: ./ruleset/Claude.yaml
-    interval: 86400
-```
-
-### Clash / Mihomo — MRS binary
-
-```yaml
-rule-providers:
-  claude:
-    type: http
-    behavior: classical
-    format: mrs
-    url: "https://raw.githubusercontent.com/zgwtm/flux/main/rules/Claude/Claude.mrs"
-    path: ./ruleset/Claude.mrs
     interval: 86400
 ```
 
