@@ -103,16 +103,43 @@ def append_custom_to_clash(clash_content, custom_rules):
     return clash_content.rstrip("\n") + "\n" + separator + custom_lines + "\n"
 
 
+MRS_UNSUPPORTED_PREFIXES = ("IP-ASN,", "DOMAIN-SET,", "URL-REGEX,", "USER-AGENT,")
+
+
+def strip_unsupported_for_mrs(clash_yaml_path):
+    with open(clash_yaml_path, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    cleaned = []
+    stripped = 0
+    for line in lines:
+        content = line.strip().lstrip("- ").strip()
+        if any(content.startswith(p) for p in MRS_UNSUPPORTED_PREFIXES):
+            stripped += 1
+            continue
+        cleaned.append(line)
+
+    if stripped == 0:
+        return clash_yaml_path
+
+    tmp_path = clash_yaml_path + ".mrs_tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        f.writelines(cleaned)
+    print(f"    stripped {stripped} unsupported rules for MRS")
+    return tmp_path
+
+
 def compile_mrs(clash_yaml_path, mrs_output_path, rule_name):
     if not shutil.which(MIHOMO_BIN) and MIHOMO_BIN == "mihomo":
         print(f"    mihomo not found, skip MRS")
         return False
 
     os.makedirs(os.path.dirname(mrs_output_path), exist_ok=True)
+    tmp_path = strip_unsupported_for_mrs(clash_yaml_path)
     try:
         subprocess.run(
             [MIHOMO_BIN, "convert-ruleset", "classical", "yaml",
-             clash_yaml_path, mrs_output_path],
+             tmp_path, mrs_output_path],
             check=True, capture_output=True, text=True, timeout=30,
         )
         print(f"    MRS ok")
@@ -126,6 +153,9 @@ def compile_mrs(clash_yaml_path, mrs_output_path, rule_name):
     except subprocess.TimeoutExpired:
         print(f"    MRS timeout ({rule_name})")
         return False
+    finally:
+        if tmp_path != clash_yaml_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 
 def sync_rules():

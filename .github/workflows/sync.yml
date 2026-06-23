@@ -46,7 +46,7 @@ jobs:
             "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
           gunzip mihomo.gz
           chmod +x mihomo
-          ./mihomo version
+          ./mihomo -v
 
       - name: Run sync
         run: |
