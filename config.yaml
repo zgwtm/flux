@@ -12,68 +12,87 @@ upstream:
     # Clash 格式：rule/Clash/{name}/{name}.yaml
 
 # --- 规则清单 ---
-# 每条规则需要指定：
-#   name:        规则名（也是输出文件名）
-#   description: 说明（给自己看的）
-#   upstream:    上游数据源名
-#   loon_path:   上游 Loon 格式路径
-#   clash_path:  上游 Clash 格式路径
-
 rules:
-  # ---- AI 服务（按服务商拆分，走不同节点）----
+  # ---- AI 服务 ----
 
   - name: OpenAI
-    description: ChatGPT / OpenAI API / DALL-E → 搬瓦工 DC9
+    description: ChatGPT / OpenAI API / DALL-E
     upstream: blackmatrix7
     loon_path: rule/Loon/OpenAI/OpenAI.list
     clash_path: rule/Clash/OpenAI/OpenAI.yaml
 
   - name: Claude
-    description: Anthropic Claude → GCP Oregon
+    description: Anthropic Claude
     upstream: blackmatrix7
     loon_path: rule/Loon/Claude/Claude.list
     clash_path: rule/Clash/Claude/Claude.yaml
 
   - name: Gemini
-    description: Google Gemini AI → 搬瓦工 DC9
+    description: Google Gemini AI
     upstream: blackmatrix7
     loon_path: rule/Loon/Gemini/Gemini.list
     clash_path: rule/Clash/Gemini/Gemini.yaml
 
+  - name: Copilot
+    description: Microsoft Copilot
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Copilot/Copilot.list
+    clash_path: rule/Clash/Copilot/Copilot.yaml
+
+  # ---- 常用服务 ----
+
   - name: Google
-    description: Google 通用服务 → 搬瓦工 DC9
+    description: Google 通用服务
     upstream: blackmatrix7
     loon_path: rule/Loon/Google/Google.list
     clash_path: rule/Clash/Google/Google.yaml
 
-  # ---- 待扩展（取消注释即可启用）----
+  - name: YouTube
+    description: YouTube 视频
+    upstream: blackmatrix7
+    loon_path: rule/Loon/YouTube/YouTube.list
+    clash_path: rule/Clash/YouTube/YouTube.yaml
 
-  # - name: Cryptocurrency
-  #   description: 加密货币交易所/行情
-  #   upstream: blackmatrix7
-  #   loon_path: rule/Loon/Crypto/Crypto.list
-  #   clash_path: rule/Clash/Crypto/Crypto.yaml
+  - name: Twitter
+    description: X / Twitter
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Twitter/Twitter.list
+    clash_path: rule/Clash/Twitter/Twitter.yaml
 
-  # - name: Telegram
-  #   description: Telegram 即时通讯
-  #   upstream: blackmatrix7
-  #   loon_path: rule/Loon/Telegram/Telegram.list
-  #   clash_path: rule/Clash/Telegram/Telegram.yaml
+  - name: Telegram
+    description: Telegram 即时通讯
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Telegram/Telegram.list
+    clash_path: rule/Clash/Telegram/Telegram.yaml
 
-  # - name: YouTube
-  #   description: YouTube 视频
-  #   upstream: blackmatrix7
-  #   loon_path: rule/Loon/YouTube/YouTube.list
-  #   clash_path: rule/Clash/YouTube/YouTube.yaml
+  - name: GitHub
+    description: GitHub
+    upstream: blackmatrix7
+    loon_path: rule/Loon/GitHub/GitHub.list
+    clash_path: rule/Clash/GitHub/GitHub.yaml
 
-  # - name: Twitter
-  #   description: X / Twitter
-  #   upstream: blackmatrix7
-  #   loon_path: rule/Loon/Twitter/Twitter.list
-  #   clash_path: rule/Clash/Twitter/Twitter.yaml
+  - name: Microsoft
+    description: Microsoft 通用服务
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Microsoft/Microsoft.list
+    clash_path: rule/Clash/Microsoft/Microsoft.yaml
 
-  # - name: GitHub
-  #   description: GitHub
-  #   upstream: blackmatrix7
-  #   loon_path: rule/Loon/GitHub/GitHub.list
-  #   clash_path: rule/Clash/GitHub/GitHub.yaml
+  - name: Netflix
+    description: Netflix 流媒体
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Netflix/Netflix.list
+    clash_path: rule/Clash/Netflix/Netflix.yaml
+
+  - name: Spotify
+    description: Spotify 音乐
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Spotify/Spotify.list
+    clash_path: rule/Clash/Spotify/Spotify.yaml
+
+  # ---- 特殊分流 ----
+
+  - name: Cryptocurrency
+    description: 加密货币交易所（需非美国节点）
+    upstream: blackmatrix7
+    loon_path: rule/Loon/Cryptocurrency/Cryptocurrency.list
+    clash_path: rule/Clash/Cryptocurrency/Cryptocurrency.yaml
