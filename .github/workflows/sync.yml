@@ -46,7 +46,6 @@ jobs:
             "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz"
           gunzip mihomo.gz
           chmod +x mihomo
-          ./mihomo -v
 
       - name: Run sync
         run: |
@@ -70,4 +69,5 @@ jobs:
           git config user.email "510182810@qq.com"
           git add rules/
           git commit -m "sync: $(date -u '+%Y-%m-%d %H:%M') UTC [text+mrs]"
+          git pull --rebase origin main
           git push
