@@ -8,7 +8,14 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-MIHOMO="$ROOT_DIR/tools/mihomo.exe"
+# 跨平台定位 mihomo：优先系统 PATH（Mac: brew install mihomo），回退到 tools/ 内置二进制
+if command -v mihomo >/dev/null 2>&1; then
+    MIHOMO="mihomo"
+elif [ -x "$ROOT_DIR/tools/mihomo" ]; then
+    MIHOMO="$ROOT_DIR/tools/mihomo"
+else
+    MIHOMO="$ROOT_DIR/tools/mihomo.exe"
+fi
 CONFIG_DIR="$ROOT_DIR/configs/cmfa"
 SOURCE="$CONFIG_DIR/cmfa-config.yml"
 OUTPUT="$CONFIG_DIR/cmfa-config.yml.age"
