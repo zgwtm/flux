@@ -1,4 +1,0 @@
-# Mokka 的补充：blackmatrix7 Steam 规则集遗漏的核心下载 CDN
-# steamcontent.com / steamserver.net = Steam 全球下载主力域名，必须直连
-DOMAIN-SUFFIX,steamcontent.com
-DOMAIN-SUFFIX,steamserver.net

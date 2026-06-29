@@ -99,6 +99,59 @@ def append_custom_to_clash(clash_content, custom_rules):
     return clash_content.rstrip("\n") + "\n" + separator + custom_lines + "\n"
 
 
+def extract_clash_rules(content):
+    """从 Clash payload(yaml) 内容里提取纯规则行，丢掉注释和 'payload:' 头。"""
+    rules = []
+    for line in content.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or s == "payload:":
+            continue
+        if s.startswith("- "):
+            s = s[2:].strip()
+        rules.append(s)
+    return rules
+
+
+def extract_loon_rules(content):
+    """从 Loon(.list) 内容里提取纯规则行，丢掉注释和空行。"""
+    rules = []
+    for line in content.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        rules.append(s)
+    return rules
+
+
+def dedup_preserve(seq):
+    """去重，但保留首次出现的顺序。"""
+    seen = set()
+    out = []
+    for x in seq:
+        if x not in seen:
+            seen.add(x)
+            out.append(x)
+    return out
+
+
+def download_and_merge(repo, branch, paths, fmt):
+    """下载多个上游路径并按 fmt('clash'/'loon') 提取规则后合并。
+    任一路径下载失败返回 (None, [])；否则返回 (rules_list, source_urls)。"""
+    all_rules = []
+    sources = []
+    for p in paths:
+        url = build_raw_url(repo, branch, p)
+        content = download_file(url)
+        if content is None:
+            return None, []
+        if fmt == "clash":
+            all_rules += extract_clash_rules(content)
+        else:
+            all_rules += extract_loon_rules(content)
+        sources.append(url)
+    return all_rules, sources
+
+
 def sync_rules():
     config = load_config()
     upstream_configs = config.get("upstream", {})
@@ -134,11 +187,27 @@ def sync_rules():
         custom_rules = read_custom_rules(name)
 
         # Loon → rules/{name}/{name}.list
+        loon_out = os.path.join(rule_dir, f"{name}.list")
+        loon_paths = rule.get("loon_paths")
         loon_path = rule.get("loon_path")
-        if loon_path:
+        if loon_paths:
+            merged, sources = download_and_merge(repo, branch, loon_paths, "loon")
+            if merged is not None:
+                merged = dedup_preserve(merged + custom_rules)
+                body = "\n".join(merged) + "\n"
+                content_with_header = add_sync_header(body, name, " + ".join(sources))
+                existing = read_existing(loon_out)
+                if existing and file_md5(existing) == file_md5(content_with_header):
+                    print(f"  .list unchanged")
+                    stats["unchanged"] += 1
+                else:
+                    write_file(loon_out, content_with_header)
+                    print(f"  .list updated (merged {len(sources)} sources -> {len(merged)} rules)")
+                    stats["updated"] += 1
+            else:
+                stats["failed"] += 1
+        elif loon_path:
             loon_url = build_raw_url(repo, branch, loon_path)
-            loon_out = os.path.join(rule_dir, f"{name}.list")
-
             content = download_file(loon_url)
             if content:
                 content_with_header = add_sync_header(content, name, loon_url)
@@ -156,11 +225,27 @@ def sync_rules():
                 stats["failed"] += 1
 
         # Clash/Mihomo → rules/{name}/{name}.yaml
+        clash_out = os.path.join(rule_dir, f"{name}.yaml")
+        clash_paths = rule.get("clash_paths")
         clash_path = rule.get("clash_path")
-        if clash_path:
+        if clash_paths:
+            merged, sources = download_and_merge(repo, branch, clash_paths, "clash")
+            if merged is not None:
+                merged = dedup_preserve(merged + custom_rules)
+                body = "payload:\n" + "\n".join(f"  - {r}" for r in merged) + "\n"
+                content_with_header = add_sync_header(body, name, " + ".join(sources))
+                existing = read_existing(clash_out)
+                if existing and file_md5(existing) == file_md5(content_with_header):
+                    print(f"  .yaml unchanged")
+                    stats["unchanged"] += 1
+                else:
+                    write_file(clash_out, content_with_header)
+                    print(f"  .yaml updated (merged {len(sources)} sources -> {len(merged)} rules)")
+                    stats["updated"] += 1
+            else:
+                stats["failed"] += 1
+        elif clash_path:
             clash_url = build_raw_url(repo, branch, clash_path)
-            clash_out = os.path.join(rule_dir, f"{name}.yaml")
-
             content = download_file(clash_url)
             if content:
                 content_with_header = add_sync_header(content, name, clash_url)

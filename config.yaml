@@ -97,16 +97,17 @@ rules:
     loon_path: rule/Loon/Cryptocurrency/Cryptocurrency.list
     clash_path: rule/Clash/Cryptocurrency/Cryptocurrency.yaml
 
-  # ---- 游戏 ----
+  # ---- 游戏（合并规则集）----
+  # GameDownload = Steam 全集 + 九平台下载 CDN，两个上游合并去重，
+  # 再叠加 rules/GameDownload/custom.list（steamserver.net / dl.playstation.net 等）。
+  # 详见 rules/GameDownload/README.md
 
-  - name: Steam
-    description: Steam（含国服 CDN，建议下载直连）
+  - name: GameDownload
+    description: Steam 全集 + 九平台下载 CDN + PS5 下载（合并去重，全部直连）
     upstream: blackmatrix7
-    loon_path: rule/Loon/Steam/Steam.list
-    clash_path: rule/Clash/Steam/Steam.yaml
-
-  - name: PlayStation
-    description: PS5 PSN（国服下载直连）
-    upstream: blackmatrix7
-    loon_path: rule/Loon/PlayStation/PlayStation.list
-    clash_path: rule/Clash/PlayStation/PlayStation.yaml
+    loon_paths:
+      - rule/Loon/Steam/Steam.list
+      - rule/Loon/Game/GameDownload/GameDownload.list
+    clash_paths:
+      - rule/Clash/Steam/Steam.yaml
+      - rule/Clash/Game/GameDownload/GameDownload.yaml

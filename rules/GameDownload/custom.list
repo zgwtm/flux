@@ -1,0 +1,13 @@
+# Mokka 的补充规则（合并进 GameDownload 的额外域名）
+#
+# 1) steamserver.net —— Steam 下载主力 CDN。
+#    实测 blackmatrix7 的 Steam 与 GameDownload 两个上游【都没收录】，会漏到代理。
+DOMAIN-SUFFIX,steamserver.net
+#
+# 2) steamcontent.com —— 我们最早发现的漏网下载域名。
+#    GameDownload 上游已含，合并时会自动去重、只保留一份；这里保留作为双保险。
+DOMAIN-SUFFIX,steamcontent.com
+#
+# 3) dl.playstation.net —— PS5 游戏下载（含 gs2.ww.prod.dl.playstation.net）。
+#    只让“下载”直连；PSN 账号 / 港服·美服商店不在此列，仍走代理。
+DOMAIN-SUFFIX,dl.playstation.net
