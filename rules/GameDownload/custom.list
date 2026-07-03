@@ -11,3 +11,7 @@ DOMAIN-SUFFIX,steamcontent.com
 # 3) dl.playstation.net —— PS5 游戏下载（含 gs2.ww.prod.dl.playstation.net）。
 #    只让“下载”直连；PSN 账号 / 港服·美服商店不在此列，仍走代理。
 DOMAIN-SUFFIX,dl.playstation.net
+#
+# 4) ps5.update.playstation.net —— PS5 系统更新文件下载。
+#    实测 dsa01.ps5.update.playstation.net 会下载 700MB+ 系统更新，未命中会走默认代理。
+DOMAIN-SUFFIX,ps5.update.playstation.net

@@ -18,6 +18,7 @@
 - **`steamserver.net`** —— Steam 下载主力 CDN，**①②两个上游都没收录**，实测会漏到代理。必须补。
 - **`steamcontent.com`** —— 最早发现的漏网下载域名；GameDownload 上游已含，**合并去重后只保留一份**，custom 里留一份作双保险。
 - **`dl.playstation.net`** —— **PS5 游戏下载**（含 `gs2.ww.prod.dl.playstation.net`）。只下载直连；PSN 账号 / 港服·美服商店不在此列，仍走代理。
+- **`ps5.update.playstation.net`** —— **PS5 系统更新文件下载**（实测 `dsa01.ps5.update.playstation.net` 下载 700MB+ 系统更新）。属于大文件下载，纳入直连。
 
 ## 合并 + 去重是怎么做的
 
