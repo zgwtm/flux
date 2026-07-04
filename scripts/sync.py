@@ -7,6 +7,7 @@
 
 import os
 import sys
+import time
 import yaml
 import hashlib
 import urllib.request
@@ -29,17 +30,22 @@ def build_raw_url(repo, branch, path):
     return f"{RAW_BASE}/{repo}/{branch}/{path}"
 
 
-def download_file(url):
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "mokka-rules-sync/1.0"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return resp.read().decode("utf-8")
-    except urllib.error.HTTPError as e:
-        print(f"  HTTP {e.code}: {url}")
-        return None
-    except Exception as e:
-        print(f"  Error: {e}")
-        return None
+def download_file(url, retries=2, delay=3):
+    for attempt in range(1 + retries):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "mokka-rules-sync/1.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return resp.read().decode("utf-8")
+        except urllib.error.HTTPError as e:
+            print(f"  HTTP {e.code}: {url}")
+            return None
+        except Exception as e:
+            if attempt < retries:
+                print(f"  Retry {attempt + 1}/{retries} after error: {e}")
+                time.sleep(delay)
+            else:
+                print(f"  Error (gave up after {1 + retries} attempts): {e}")
+                return None
 
 
 def file_md5(content):

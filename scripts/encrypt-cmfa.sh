@@ -43,8 +43,15 @@ echo "公钥: oneplus12 (mlkem768-x25519)"
 echo ""
 
 "$MIHOMO" age encrypt "$PUBLIC_KEY" "$SOURCE" "$OUTPUT"
+
+OUTPUT_SIZE=$(wc -c < "$OUTPUT" | tr -d ' ')
+if [ ! -f "$OUTPUT" ] || [ "$OUTPUT_SIZE" -lt 100 ]; then
+    echo "加密输出异常（文件不存在或小于 100 字节），终止推送"
+    exit 1
+fi
+
 echo "加密完成: $OUTPUT"
-echo "文件大小: $(wc -c < "$OUTPUT") bytes"
+echo "文件大小: ${OUTPUT_SIZE} bytes"
 echo ""
 
 cd "$ROOT_DIR"
