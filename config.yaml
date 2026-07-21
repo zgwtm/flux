@@ -53,6 +53,21 @@ rules:
     loon_path: rule/Loon/YouTube/YouTube.list
     clash_path: rule/Clash/YouTube/YouTube.yaml
 
+  # 谷歌全家桶 = Gemini + YouTube + Google，按顺序合并去重。
+  # name 是显示名称，slug 是稳定的目录和文件名。
+  - name: 谷歌全家桶
+    slug: GoogleSuite
+    description: Google 通用服务 + Gemini + YouTube（融合去重）
+    upstream: blackmatrix7
+    loon_paths:
+      - rule/Loon/Gemini/Gemini.list
+      - rule/Loon/YouTube/YouTube.list
+      - rule/Loon/Google/Google.list
+    clash_paths:
+      - rule/Clash/Gemini/Gemini.yaml
+      - rule/Clash/YouTube/YouTube.yaml
+      - rule/Clash/Google/Google.yaml
+
   - name: Twitter
     description: X / Twitter
     upstream: blackmatrix7

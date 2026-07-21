@@ -2,9 +2,10 @@
 """
 规则同步脚本
 从上游拉取规则 → 合并自定义补充 → 输出 .list / .yaml 两种格式
-所有文件按规则名分文件夹：rules/{name}/
+默认按规则名分文件夹；配置 slug 后按 slug 分文件夹：rules/{slug}/
 """
 
+import argparse
 import os
 import sys
 import time
@@ -140,6 +141,22 @@ def dedup_preserve(seq):
     return out
 
 
+def resolve_rule_slug(rule):
+    """返回规则的文件标识；slug 仅允许单个安全路径片段。"""
+    name = rule["name"]
+    slug = rule.get("slug", name)
+    if not isinstance(slug, str) or not slug.strip() or slug != slug.strip():
+        raise ValueError(f"rule {name!r} has an empty or invalid slug")
+    if (
+        slug in {".", ".."}
+        or os.path.basename(slug) != slug
+        or "/" in slug
+        or "\\" in slug
+    ):
+        raise ValueError(f"rule {name!r} has an unsafe slug: {slug!r}")
+    return slug
+
+
 def download_and_merge(repo, branch, paths, fmt):
     """下载多个上游路径并按 fmt('clash'/'loon') 提取规则后合并。
     任一路径下载失败返回 (None, [])；否则返回 (rules_list, source_urls)。"""
@@ -158,7 +175,7 @@ def download_and_merge(repo, branch, paths, fmt):
     return all_rules, sources
 
 
-def sync_rules():
+def sync_rules(only=None):
     config = load_config()
     upstream_configs = config.get("upstream", {})
     rules = config.get("rules", [])
@@ -167,12 +184,31 @@ def sync_rules():
         print("No rules in config.yaml")
         return
 
+    resolved_rules = []
+    seen_slugs = set()
+    for rule in rules:
+        slug = resolve_rule_slug(rule)
+        if slug in seen_slugs:
+            raise ValueError(f"duplicate rule slug: {slug!r}")
+        seen_slugs.add(slug)
+        resolved_rules.append((rule, slug))
+
+    if only:
+        resolved_rules = [
+            (rule, slug)
+            for rule, slug in resolved_rules
+            if rule["name"] == only or slug == only
+        ]
+        if not resolved_rules:
+            print(f"Rule not found: {only}", file=sys.stderr)
+            sys.exit(2)
+
     stats = {"updated": 0, "unchanged": 0, "failed": 0}
 
-    print(f"Syncing {len(rules)} rules...")
+    print(f"Syncing {len(resolved_rules)} rules...")
     print("=" * 50)
 
-    for rule in rules:
+    for rule, slug in resolved_rules:
         name = rule["name"]
         upstream_name = rule["upstream"]
         upstream_cfg = upstream_configs.get(upstream_name)
@@ -185,15 +221,15 @@ def sync_rules():
         repo = upstream_cfg["repo"]
         branch = upstream_cfg["branch"]
 
-        rule_dir = os.path.join(RULES_DIR, name)
+        rule_dir = os.path.join(RULES_DIR, slug)
         os.makedirs(rule_dir, exist_ok=True)
 
         print(f"\n[{name}] {rule.get('description', '')}")
 
-        custom_rules = read_custom_rules(name)
+        custom_rules = read_custom_rules(slug)
 
-        # Loon → rules/{name}/{name}.list
-        loon_out = os.path.join(rule_dir, f"{name}.list")
+        # Loon → rules/{slug}/{slug}.list
+        loon_out = os.path.join(rule_dir, f"{slug}.list")
         loon_paths = rule.get("loon_paths")
         loon_path = rule.get("loon_path")
         if loon_paths:
@@ -230,8 +266,8 @@ def sync_rules():
             else:
                 stats["failed"] += 1
 
-        # Clash/Mihomo → rules/{name}/{name}.yaml
-        clash_out = os.path.join(rule_dir, f"{name}.yaml")
+        # Clash/Mihomo → rules/{slug}/{slug}.yaml
+        clash_out = os.path.join(rule_dir, f"{slug}.yaml")
         clash_paths = rule.get("clash_paths")
         clash_path = rule.get("clash_path")
         if clash_paths:
@@ -276,5 +312,16 @@ def sync_rules():
         sys.exit(1)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="同步规则集")
+    parser.add_argument(
+        "--only",
+        metavar="NAME_OR_SLUG",
+        help="只同步指定的规则显示名或 slug",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    sync_rules()
+    args = parse_args()
+    sync_rules(args.only)
