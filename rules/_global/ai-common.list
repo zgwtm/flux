@@ -13,9 +13,13 @@
 # 引用方式：RULE-SET,ai-common,🧩 AI 通用组件
 # 出口取向：跟 Claude 主站同出口（Claude 账号地理位置风险最高）
 
-# ── 客服 ──
-DOMAIN-SUFFIX,intercom.io
-DOMAIN-SUFFIX,intercomcdn.com
+# ⚠️ 2026-08-09 二次收拾：以下 5 条曾经收在这里，现已移除——
+#    statsigapi.net · intercom.io · intercomcdn.com
+#    browser-intake-us5-datadoghq.com · cdn.usefathom.com
+#    它们在 rules/Claude/custom.list 里已有一份，而 Claude 规则集排在
+#    本文件之前，这里这份永远匹配不到，是死规则。
+#    保留 Claude 那份而不是这份，是为了让 Claude 的遥测【硬绑主站出口】——
+#    就算本文件的策略组哪天配错，也伤不到 Claude 账号。
 
 # ── 站内搜索 ──
 DOMAIN-SUFFIX,algolia.net
@@ -24,12 +28,12 @@ DOMAIN-SUFFIX,algolia.net
 DOMAIN-SUFFIX,sentry.io
 DOMAIN-SUFFIX,segment.io
 DOMAIN-SUFFIX,observeit.net
-DOMAIN-SUFFIX,statsigapi.net
 DOMAIN-SUFFIX,api.statsig.com
-DOMAIN,browser-intake-datadoghq.com
-DOMAIN,browser-intake-us5-datadoghq.com
 DOMAIN,static.cloudflareinsights.com
-DOMAIN,cdn.usefathom.com
+# 注：browser-intake-datadoghq.com 不收在这里 —— MetaCubeX 已把它收进
+#     openai 分类，OpenAI 规则集排在本文件之前，这里再写一遍也匹配不到。
+#     （别跟 Claude 的 browser-intake-us5-datadoghq.com 弄混，差 "us5-"
+#      四个字符，是 Datadog 两个不同区域的接收端，两家各用各的。）
 
 # ── 功能开关 ──
 DOMAIN-SUFFIX,launchdarkly.com
