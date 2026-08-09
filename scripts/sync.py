@@ -7,6 +7,7 @@
 
 import argparse
 import os
+import re
 import sys
 import time
 import yaml
@@ -51,6 +52,19 @@ def download_file(url, retries=2, delay=3):
 
 def file_md5(content):
     return hashlib.md5(content.encode("utf-8")).hexdigest()
+
+
+UPDATED_LINE_PATTERN = re.compile(r"^# Updated: .*$", re.MULTILINE)
+
+
+def content_fingerprint(content):
+    """比较用指纹：抹掉同步头里的时间戳之后再算哈希。
+
+    add_sync_header() 每次都会写入当前时间，直接比较全文的话哈希永远不相等，
+    于是每天都会重写全部文件，产生一个只有 Updated 行变化的空提交。
+    只忽略时间戳，Source、Rule 等其它头部信息变了仍然算内容变化。
+    """
+    return file_md5(UPDATED_LINE_PATTERN.sub("# Updated: -", content))
 
 
 def read_existing(path):
@@ -239,7 +253,7 @@ def sync_rules(only=None):
                 body = "\n".join(merged) + "\n"
                 content_with_header = add_sync_header(body, name, " + ".join(sources))
                 existing = read_existing(loon_out)
-                if existing and file_md5(existing) == file_md5(content_with_header):
+                if existing and content_fingerprint(existing) == content_fingerprint(content_with_header):
                     print(f"  .list unchanged")
                     stats["unchanged"] += 1
                 else:
@@ -256,7 +270,7 @@ def sync_rules(only=None):
                 if custom_rules:
                     content_with_header = append_custom_to_loon(content_with_header, custom_rules)
                 existing = read_existing(loon_out)
-                if existing and file_md5(existing) == file_md5(content_with_header):
+                if existing and content_fingerprint(existing) == content_fingerprint(content_with_header):
                     print(f"  .list unchanged")
                     stats["unchanged"] += 1
                 else:
@@ -277,7 +291,7 @@ def sync_rules(only=None):
                 body = "payload:\n" + "\n".join(f"  - {r}" for r in merged) + "\n"
                 content_with_header = add_sync_header(body, name, " + ".join(sources))
                 existing = read_existing(clash_out)
-                if existing and file_md5(existing) == file_md5(content_with_header):
+                if existing and content_fingerprint(existing) == content_fingerprint(content_with_header):
                     print(f"  .yaml unchanged")
                     stats["unchanged"] += 1
                 else:
@@ -294,7 +308,7 @@ def sync_rules(only=None):
                 if custom_rules:
                     content_with_header = append_custom_to_clash(content_with_header, custom_rules)
                 existing = read_existing(clash_out)
-                if existing and file_md5(existing) == file_md5(content_with_header):
+                if existing and content_fingerprint(existing) == content_fingerprint(content_with_header):
                     print(f"  .yaml unchanged")
                     stats["unchanged"] += 1
                 else:
