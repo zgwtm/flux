@@ -1,26 +1,46 @@
 # Synced by mokka-rules
 # Rule: Gemini
-# Source: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Loon/Gemini/Gemini.list
-# Updated: 2026-08-09 15:16:46 CST
+# Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google-gemini.list
+# Updated: 2026-08-09 17:33:57 CST
 #
-# NAME: Gemini
-# AUTHOR: blackmatrix7
-# REPO: https://github.com/blackmatrix7/ios_rule_script
-# UPDATED: 2025-06-06 09:20:02
-# DOMAIN: 3
-# DOMAIN-KEYWORD: 3
-# DOMAIN-SUFFIX: 7
-# TOTAL: 13
 DOMAIN,ai.google.dev
+DOMAIN,alkalicore-pa.clients6.google.com
 DOMAIN,alkalimakersuite-pa.clients6.google.com
-DOMAIN,makersuite.google.com
-DOMAIN-SUFFIX,bard.google.com
-DOMAIN-SUFFIX,deepmind.com
+DOMAIN,webchannel-alkalimakersuite-pa.clients6.google.com
+DOMAIN,cloudaicompanion.googleapis.com
+DOMAIN,cloudcode-pa.googleapis.com
+DOMAIN,daily-cloudcode-pa.googleapis.com
+DOMAIN,notebooklm-pa.googleapis.com
+DOMAIN,notebooklm.googleapis.com
+DOMAIN,antigravity-pa.googleapis.com
+DOMAIN,antigravity.googleapis.com
+DOMAIN-SUFFIX,notebooklm.google
 DOMAIN-SUFFIX,deepmind.google
-DOMAIN-SUFFIX,gemini.google.com
+DOMAIN-SUFFIX,antigravity-unleash.goog
+DOMAIN-SUFFIX,antigravity.google
+DOMAIN-SUFFIX,opal.google
+DOMAIN-SUFFIX,flow.google
 DOMAIN-SUFFIX,generativeai.google
+DOMAIN-SUFFIX,deepmind.com
+DOMAIN-SUFFIX,ai.studio
+DOMAIN-SUFFIX,labs.google
+DOMAIN-SUFFIX,jules.google
+DOMAIN-SUFFIX,gemini.google
+DOMAIN-SUFFIX,makersuite.google.com
+DOMAIN-SUFFIX,robinfrontend-pa.googleapis.com
+DOMAIN-SUFFIX,notebook.google.com
+DOMAIN-SUFFIX,gemini.google.com
+DOMAIN-SUFFIX,notebooklm.google.com
+DOMAIN-SUFFIX,bard.google.com
+DOMAIN-SUFFIX,jules.google.com
+DOMAIN-SUFFIX,aistudio.google.com
+DOMAIN-SUFFIX,labs.google.com
+DOMAIN-SUFFIX,gemini.gstatic.com
+DOMAIN-SUFFIX,aisandbox-pa.googleapis.com
+DOMAIN-SUFFIX,aicode.googleapis.com
+DOMAIN-SUFFIX,aida.googleapis.com
 DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com
-DOMAIN-SUFFIX,apis.google.com
-DOMAIN-KEYWORD,colab
-DOMAIN-KEYWORD,developerprofiles
-DOMAIN-KEYWORD,generativelanguage
+DOMAIN-SUFFIX,opal.google.com
+DOMAIN-SUFFIX,generativelanguage.googleapis.com
+DOMAIN-SUFFIX,geller-pa.googleapis.com
+DOMAIN-SUFFIX,stitch.withgoogle.com
