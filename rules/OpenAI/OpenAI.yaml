@@ -49,3 +49,11 @@ payload:
   - IP-CIDR,24.199.123.28/32
   - IP-CIDR,64.23.132.171/32
   - IP-ASN,20473
+  # ========== Mokka 的补充规则 ==========
+  - DOMAIN-SUFFIX,sora.com
+  - DOMAIN-SUFFIX,chat.com
+  - DOMAIN-SUFFIX,chatgpt.site
+  - DOMAIN-SUFFIX,oaistatsig.com
+  - DOMAIN-SUFFIX,crixet.com
+  - DOMAIN,openaiassets.blob.core.windows.net
+  - DOMAIN,openai.qualtrics.com

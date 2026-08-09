@@ -1,2 +1,30 @@
 # Mokka 酱的 OpenAI 补充规则
 # 在这里添加 blackmatrix7 上游没覆盖到的规则
+#
+# ── 2026-08-09 补录 ──────────────────────────────────────────────
+# 背景：上游 blackmatrix7 的 OpenAI 规则停更在 2025-06-06（约 14 个月），
+#       而这期间 OpenAI 启用了若干新域名。
+# 方法：以 MetaCubeX geosite/openai 为参照做差集，补齐上游遗漏项。
+#
+# 1) sora.com —— Sora 的独立域名。上游只收了 chatgpt.com / openai.com。
+DOMAIN-SUFFIX,sora.com
+#
+# 2) chat.com —— OpenAI 2024 年启用的短域名，跳转 ChatGPT。
+DOMAIN-SUFFIX,chat.com
+#
+# 3) chatgpt.site —— OpenAI 的另一站点域名。
+DOMAIN-SUFFIX,chatgpt.site
+#
+# 4) oaistatsig.com —— OpenAI 自建的 Statsig 功能开关实例。
+#    注意与通用的 statsigapi.net 区分，后者归 Claude 分类。
+DOMAIN-SUFFIX,oaistatsig.com
+#
+# 5) crixet.com —— MetaCubeX 归入 openai 分类，用途未完全确认，
+#    先跟随上游收录；日后确认无关可移除。
+DOMAIN-SUFFIX,crixet.com
+#
+# 6) openaiassets.blob.core.windows.net —— 资源存储（Azure Blob）。
+DOMAIN,openaiassets.blob.core.windows.net
+#
+# 7) openai.qualtrics.com —— 问卷调查服务。
+DOMAIN,openai.qualtrics.com
