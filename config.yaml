@@ -2,127 +2,136 @@
 # Mokka 酱的规则精选集
 # 改这里加规则，GitHub Actions 每天自动同步上游
 # ============================================
+#
+# 2026-08-09 换源：blackmatrix7 → MetaCubeX
+#
+# 为什么换：
+#   · blackmatrix7 的 AI 四类停更于 2025-06-06，约 14 个月未更新
+#   · 更要命的是它的收录原则是「把这家用到的一切都收进来」，于是
+#     多家共用的第三方（auth0 / statsig / intercom / stripe…）被重复收进
+#     不同分类，互相打架 —— 实测 OpenAI 的 auth0.com 会吃掉 Claude 的
+#     anthropic.auth0.com，导致 Claude 的登录从 ChatGPT 的出口发出去
+#   · MetaCubeX 只收「这家自己的域名」，天然不会交叉，且持续维护
+#
+# 新的取数方式：
+#   每条规则用 paths 指向 MetaCubeX 的 geosite .list，
+#   sync.py 下载一次、转换一次，同时产出 .list（Loon）与 .yaml（Clash）。
+#   两端拿到的是同一批规则 + 同一份 custom —— 内容必然一致，无需事后对账。
+#
+# 上游只有两种写法，转换器都认：
+#   +.example.com  →  DOMAIN-SUFFIX,example.com
+#   example.com    →  DOMAIN,example.com
 
 # --- 上游数据源 ---
 upstream:
-  blackmatrix7:
-    repo: blackmatrix7/ios_rule_script
-    branch: master
-    # Loon 格式：rule/Loon/{name}/{name}.list
-    # Clash 格式：rule/Clash/{name}/{name}.yaml
+  metacubex:
+    repo: MetaCubeX/meta-rules-dat
+    branch: meta
+    # 统一源路径：geo/geosite/{name}.list
 
 # --- 规则清单 ---
 rules:
   # ---- AI 服务 ----
+  # 注：Copilot 于 2026-08-09 移除（MetaCubeX 无同名分类，且实际用不到）
 
   - name: OpenAI
-    description: ChatGPT / OpenAI API / DALL-E
-    upstream: blackmatrix7
-    loon_path: rule/Loon/OpenAI/OpenAI.list
-    clash_path: rule/Clash/OpenAI/OpenAI.yaml
+    description: ChatGPT / OpenAI API / Sora
+    upstream: metacubex
+    paths:
+      - geo/geosite/openai.list
 
   - name: Claude
     description: Anthropic Claude
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Claude/Claude.list
-    clash_path: rule/Clash/Claude/Claude.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/anthropic.list
 
   - name: Gemini
     description: Google Gemini AI
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Gemini/Gemini.list
-    clash_path: rule/Clash/Gemini/Gemini.yaml
-
-  - name: Copilot
-    description: Microsoft Copilot
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Copilot/Copilot.list
-    clash_path: rule/Clash/Copilot/Copilot.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/google-gemini.list
 
   # ---- 常用服务 ----
 
   - name: Google
     description: Google 通用服务
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Google/Google.list
-    clash_path: rule/Clash/Google/Google.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/google.list
 
   - name: YouTube
     description: YouTube 视频
-    upstream: blackmatrix7
-    loon_path: rule/Loon/YouTube/YouTube.list
-    clash_path: rule/Clash/YouTube/YouTube.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/youtube.list
 
   # 谷歌全家桶 = Gemini + YouTube + Google，按顺序合并去重。
   # name 是显示名称，slug 是稳定的目录和文件名。
   - name: 谷歌全家桶
     slug: GoogleSuite
     description: Google 通用服务 + Gemini + YouTube（融合去重）
-    upstream: blackmatrix7
-    loon_paths:
-      - rule/Loon/Gemini/Gemini.list
-      - rule/Loon/YouTube/YouTube.list
-      - rule/Loon/Google/Google.list
-    clash_paths:
-      - rule/Clash/Gemini/Gemini.yaml
-      - rule/Clash/YouTube/YouTube.yaml
-      - rule/Clash/Google/Google.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/google-gemini.list
+      - geo/geosite/youtube.list
+      - geo/geosite/google.list
 
   - name: Twitter
     description: X / Twitter
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Twitter/Twitter.list
-    clash_path: rule/Clash/Twitter/Twitter.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/twitter.list
 
   - name: Telegram
     description: Telegram 即时通讯
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Telegram/Telegram.list
-    clash_path: rule/Clash/Telegram/Telegram.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/telegram.list
 
   - name: GitHub
     description: GitHub
-    upstream: blackmatrix7
-    loon_path: rule/Loon/GitHub/GitHub.list
-    clash_path: rule/Clash/GitHub/GitHub.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/github.list
 
   - name: Microsoft
     description: Microsoft 通用服务
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Microsoft/Microsoft.list
-    clash_path: rule/Clash/Microsoft/Microsoft.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/microsoft.list
 
   - name: Netflix
     description: Netflix 流媒体
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Netflix/Netflix.list
-    clash_path: rule/Clash/Netflix/Netflix.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/netflix.list
 
   - name: Spotify
     description: Spotify 音乐
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Spotify/Spotify.list
-    clash_path: rule/Clash/Spotify/Spotify.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/spotify.list
 
   # ---- 特殊分流 ----
 
   - name: Cryptocurrency
     description: 加密货币交易所（需非美国节点）
-    upstream: blackmatrix7
-    loon_path: rule/Loon/Cryptocurrency/Cryptocurrency.list
-    clash_path: rule/Clash/Cryptocurrency/Cryptocurrency.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/category-cryptocurrency.list
 
   # ---- 游戏（合并规则集）----
   # GameDownload = Steam 全集 + 九平台下载 CDN，两个上游合并去重，
   # 再叠加 rules/GameDownload/custom.list（steamserver.net / dl.playstation.net 等）。
   # 详见 rules/GameDownload/README.md
+  #
+  # 换源说明：blackmatrix7 的 Game/GameDownload 在 MetaCubeX 的对应物是
+  # category-game-platforms-download（491 条，覆盖面更广）。
 
   - name: GameDownload
     description: Steam 全集 + 九平台下载 CDN + PS5 下载（合并去重，全部直连）
-    upstream: blackmatrix7
-    loon_paths:
-      - rule/Loon/Steam/Steam.list
-      - rule/Loon/Game/GameDownload/GameDownload.list
-    clash_paths:
-      - rule/Clash/Steam/Steam.yaml
-      - rule/Clash/Game/GameDownload/GameDownload.yaml
+    upstream: metacubex
+    paths:
+      - geo/geosite/steam.list
+      - geo/geosite/category-game-platforms-download.list

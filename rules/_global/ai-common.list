@@ -1,0 +1,40 @@
+# AI 通用组件（Loon 格式）
+#
+# 这里收的是【多家 AI 服务共用的第三方基础设施】——客服、搜索、遥测、
+# 功能开关、通用登录。它们不属于任何一家，硬挂在某一家名下就会撞车：
+# 2026-08-09 实测发现，Loon 端 OpenAI 的 auth0.com 把 Claude 的
+# anthropic.auth0.com 吃掉了，Claude 的登录会从 ChatGPT 的出口发出去。
+#
+# 收录原则：
+#   通用第三方域名          → 收进这里
+#   带 anthropic/openai 的  → 留在各家自己的分类（那是专属子域）
+#   会被服务端拿来跟主站对账 → 留在各家（例如人机验证 Arkose）
+#
+# 引用方式：RULE-SET,ai-common,🧩 AI 通用组件
+# 出口取向：跟 Claude 主站同出口（Claude 账号地理位置风险最高）
+
+# ── 客服 ──
+DOMAIN-SUFFIX,intercom.io
+DOMAIN-SUFFIX,intercomcdn.com
+
+# ── 站内搜索 ──
+DOMAIN-SUFFIX,algolia.net
+
+# ── 遥测 / 错误上报 / 站点分析 ──
+DOMAIN-SUFFIX,sentry.io
+DOMAIN-SUFFIX,segment.io
+DOMAIN-SUFFIX,observeit.net
+DOMAIN-SUFFIX,statsigapi.net
+DOMAIN-SUFFIX,api.statsig.com
+DOMAIN,browser-intake-datadoghq.com
+DOMAIN,browser-intake-us5-datadoghq.com
+DOMAIN,static.cloudflareinsights.com
+DOMAIN,cdn.usefathom.com
+
+# ── 功能开关 ──
+DOMAIN-SUFFIX,launchdarkly.com
+DOMAIN-SUFFIX,featuregates.org
+
+# ── 通用登录 / 证书校验 ──
+DOMAIN-SUFFIX,auth0.com
+DOMAIN-SUFFIX,identrust.com

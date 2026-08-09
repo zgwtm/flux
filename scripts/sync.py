@@ -144,6 +144,41 @@ def extract_loon_rules(content):
     return rules
 
 
+def extract_metacubex_rules(content):
+    """MetaCubeX geosite 的 .list → 标准规则行。
+
+    该格式只有两种写法（2026-08-09 抽样 8 个分类共 2827 条确认，无第三种）：
+        +.example.com  →  DOMAIN-SUFFIX,example.com
+        example.com    →  DOMAIN,example.com
+
+    产出的规则行 Loon 与 Clash 通用，差别只在外层包装（.list 直接列，
+    .yaml 包一层 payload）——这正是「两端同源」能成立的原因：
+    同一份源文件、同一次转换，两个格式的内容不可能对不上。
+    """
+    rules = []
+    for line in content.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        if s.startswith("+."):
+            rules.append(f"DOMAIN-SUFFIX,{s[2:]}")
+        else:
+            rules.append(f"DOMAIN,{s}")
+    return rules
+
+
+def write_if_changed(path, content, label, rule_count, source_count, stats):
+    """内容有变才写盘；只有时间戳变化不算变化。"""
+    existing = read_existing(path)
+    if existing and content_fingerprint(existing) == content_fingerprint(content):
+        print(f"  {label} unchanged")
+        stats["unchanged"] += 1
+    else:
+        write_file(path, content)
+        print(f"  {label} updated ({source_count} sources -> {rule_count} rules)")
+        stats["updated"] += 1
+
+
 def dedup_preserve(seq):
     """去重，但保留首次出现的顺序。"""
     seen = set()
@@ -183,6 +218,8 @@ def download_and_merge(repo, branch, paths, fmt):
             return None, []
         if fmt == "clash":
             all_rules += extract_clash_rules(content)
+        elif fmt == "metacubex":
+            all_rules += extract_metacubex_rules(content)
         else:
             all_rules += extract_loon_rules(content)
         sources.append(url)
@@ -241,6 +278,35 @@ def sync_rules(only=None):
         print(f"\n[{name}] {rule.get('description', '')}")
 
         custom_rules = read_custom_rules(slug)
+
+        # ── MetaCubeX 统一源（2026-08-09 起的主路径）──────────────────
+        # 下载一次，同时产出 .list（Loon）与 .yaml（Clash）。
+        # 两端拿到的是同一批规则、同一次去重、同一份 custom，
+        # 所以【两端内容必然一致】——不再需要事后对账。
+        # 旧的 loon_path / clash_path 分支保留在下方，暂未使用。
+        mc_paths = rule.get("paths")
+        if mc_paths:
+            merged, sources = download_and_merge(repo, branch, mc_paths, "metacubex")
+            if merged is None:
+                stats["failed"] += 1
+                continue
+            merged = dedup_preserve(merged + custom_rules)
+            source_label = " + ".join(sources)
+
+            loon_body = "\n".join(merged) + "\n"
+            write_if_changed(
+                os.path.join(rule_dir, f"{slug}.list"),
+                add_sync_header(loon_body, name, source_label),
+                ".list", len(merged), len(sources), stats,
+            )
+
+            clash_body = "payload:\n" + "\n".join(f"  - {r}" for r in merged) + "\n"
+            write_if_changed(
+                os.path.join(rule_dir, f"{slug}.yaml"),
+                add_sync_header(clash_body, name, source_label),
+                ".yaml", len(merged), len(sources), stats,
+            )
+            continue
 
         # Loon → rules/{slug}/{slug}.list
         loon_out = os.path.join(rule_dir, f"{slug}.list")

@@ -28,3 +28,26 @@ DOMAIN,openaiassets.blob.core.windows.net
 #
 # 7) openai.qualtrics.com —— 问卷调查服务。
 DOMAIN,openai.qualtrics.com
+#
+# ── 2026-08-09 换源补录（blackmatrix7 → MetaCubeX）───────────────────
+# 以下几条原先由 blackmatrix7 上游提供，MetaCubeX 只收 OpenAI 自家域名，
+# 不搬到 custom 就会掉。判断标准是【服务端会不会拿它跟主站对账】：
+#
+# 8-9) Arkose Labs 人机验证 —— 必须与主站同出口，否则验证系统会看到
+#      「网页在一个地方、验证在另一个地方」，可能判为异常会话。
+DOMAIN-SUFFIX,client-api.arkoselabs.com
+DOMAIN,openai-api.arkoselabs.com
+#
+# 10) ai.com —— 早期跳转 ChatGPT 的短域名。
+DOMAIN-SUFFIX,ai.com
+#
+# 11) 关键词兜底 —— 接住 MetaCubeX 未逐条收录的 openai 相关域名。
+#     放在最后，优先级低于上面所有精确规则。
+DOMAIN-KEYWORD,openai
+#
+# 注：原上游还带来 auth0 / statsig / intercom / sentry / segment / stripe /
+#     algolia / launchdarkly 等【多家 AI 共用的第三方】，它们已统一迁往
+#     rules/_global/ai-common.list，不再挂在 OpenAI 名下——正是这批东西
+#     当初把 Claude 的 anthropic.auth0.com 吃掉的。
+# 注：原上游的 IP-ASN,20473 与两条 DigitalOcean /32 已弃用：
+#     那是整段云厂商地址，归进 OpenAI 分类过宽。

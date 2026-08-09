@@ -1,0 +1,15 @@
+# AI 支付（Loon 格式）
+#
+# 单独成组的理由，不是洁癖，是 2026-08-09 真实发生过的事：
+# ChatGPT 出口切到台湾家宽之后，Stripe 付款也跟着从台湾发起。
+# 支付有风控——出口国家一变可能触发额外验证甚至拒付。
+#
+# 所以这一组的规矩是【定了就别动】：
+#   · 固定走一个与账单币种一致的稳定出口
+#   · 永远不参与任何实验性切换
+#   · 就算 ChatGPT / Claude 换出口，这一组也不跟
+#
+# 引用方式：RULE-SET,ai-payment,💳 AI 支付
+
+DOMAIN-SUFFIX,stripe.com
+DOMAIN-SUFFIX,stripe.network

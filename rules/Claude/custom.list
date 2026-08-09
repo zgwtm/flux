@@ -18,6 +18,9 @@ DOMAIN,anthropic.auth0.com
 DOMAIN,anthropic-com.ghost.io
 DOMAIN-SUFFIX,statsigapi.net
 DOMAIN,browser-intake-us5-datadoghq.com
+# 2026-08-09 换源补录：Fathom 站点分析。原先由 blackmatrix7 上游提供，
+# MetaCubeX 只收 Anthropic 自家域名，不换到 custom 就会掉。
+DOMAIN,cdn.usefathom.com
 
 # 客服 / 第三方
 DOMAIN-SUFFIX,intercom.io
