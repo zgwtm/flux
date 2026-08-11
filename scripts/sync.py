@@ -35,7 +35,7 @@ def build_raw_url(repo, branch, path):
 def download_file(url, retries=2, delay=3):
     for attempt in range(1 + retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "mokka-rules-sync/1.0"})
+            req = urllib.request.Request(url, headers={"User-Agent": "flux-rules-sync/1.0"})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return resp.read().decode("utf-8")
         except urllib.error.HTTPError as e:
@@ -84,7 +84,7 @@ def add_sync_header(content, rule_name, upstream_url):
     cst = timezone(timedelta(hours=8))
     now = datetime.now(cst).strftime("%Y-%m-%d %H:%M:%S CST")
     header = (
-        f"# Synced by mokka-rules\n"
+        f"# Synced by flux-rules\n"
         f"# Rule: {rule_name}\n"
         f"# Source: {upstream_url}\n"
         f"# Updated: {now}\n"

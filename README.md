@@ -1,6 +1,6 @@
 # flux
 
-Personal network filtering rules — curated from upstream sources, auto-synced daily.
+Network filtering rule sets curated from upstream sources and synchronized daily.
 
 ## Structure
 
@@ -23,7 +23,7 @@ rules/
 ### Loon
 
 ```
-https://raw.githubusercontent.com/zgwtm/flux/main/rules/{RuleName}/{RuleName}.list
+https://raw.githubusercontent.com/<owner>/flux/main/rules/{RuleName}/{RuleName}.list
 ```
 
 ### Clash / Mihomo
@@ -33,7 +33,7 @@ rule-providers:
   claude:
     type: http
     behavior: classical
-    url: "https://raw.githubusercontent.com/zgwtm/flux/main/rules/Claude/Claude.yaml"
+    url: "https://raw.githubusercontent.com/<owner>/flux/main/rules/Claude/Claude.yaml"
     path: ./ruleset/Claude.yaml
     interval: 86400
 ```
@@ -45,3 +45,9 @@ Edit `config.yaml` or `rules/{name}/custom.list`, push — GitHub Actions handle
 ## Sync Schedule
 
 Daily at UTC 20:00 (CST 04:00). Also triggers on `config.yaml` or `custom.list` changes.
+
+## Encrypted Artifacts
+
+`configs/cmfa/` contains an age-encrypted client configuration artifact. Its plaintext source,
+recipient private key, local paths, and publishing environment are intentionally not stored in
+this repository.
