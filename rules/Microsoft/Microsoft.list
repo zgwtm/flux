@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: Microsoft
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.list
-# Updated: 2026-08-25 04:20:02 CST
+# Updated: 2026-08-26 04:18:59 CST
 #
 DOMAIN,img-prod-cms-rt-microsoft-com.akamaized.net
 DOMAIN,img-s-msn-com.akamaized.net
@@ -10,8 +10,8 @@ DOMAIN,officecdn-microsoft-com.akamaized.net
 DOMAIN,statics-marketingsites-eas-ms-com.akamaized.net
 DOMAIN,statics-marketingsites-eus-ms-com.akamaized.net
 DOMAIN,statics-marketingsites-wcus-ms-com.akamaized.net
-DOMAIN,prodforza.blob.core.windows.net
 DOMAIN,flightsimulator.azureedge.net
+DOMAIN,prodforza.blob.core.windows.net
 DOMAIN,azure.microsoft.com
 DOMAIN,azuremarketplace.microsoft.com
 DOMAIN,location.microsoft.com
@@ -349,6 +349,8 @@ DOMAIN-SUFFIX,xboxplayanywhere.com
 DOMAIN-SUFFIX,xboxservices.com
 DOMAIN-SUFFIX,xboxstudios.com
 DOMAIN-SUFFIX,xbx.lv
+DOMAIN-SUFFIX,asobostudio.com
+DOMAIN-SUFFIX,flightsimulator.com
 DOMAIN-SUFFIX,beth.games
 DOMAIN-SUFFIX,bethesda.net
 DOMAIN-SUFFIX,bethesdagamestudios.com
@@ -365,8 +367,6 @@ DOMAIN-SUFFIX,minecraft.net
 DOMAIN-SUFFIX,minecraftservices.com
 DOMAIN-SUFFIX,minecraftshop.com
 DOMAIN-SUFFIX,mojang.com
-DOMAIN-SUFFIX,asobostudio.com
-DOMAIN-SUFFIX,flightsimulator.com
 DOMAIN-SUFFIX,microsoft.be
 DOMAIN-SUFFIX,aadrm.com
 DOMAIN-SUFFIX,azure-api.net
