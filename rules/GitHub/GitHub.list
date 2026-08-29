@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: GitHub
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.list
-# Updated: 2026-08-09 17:33:57 CST
+# Updated: 2026-08-30 06:08:31 CST
 #
 DOMAIN,github-api.arkoselabs.com
 DOMAIN,github-cloud.s3.amazonaws.com
@@ -60,10 +60,10 @@ DOMAIN-SUFFIX,octocaptcha.com
 DOMAIN-SUFFIX,opensource.guide
 DOMAIN-SUFFIX,repo.new
 DOMAIN-SUFFIX,thegithubshop.com
-DOMAIN-SUFFIX,githubcopilot.com
 DOMAIN-SUFFIX,npm.community
 DOMAIN-SUFFIX,npmjs.com
 DOMAIN-SUFFIX,npmjs.org
+DOMAIN-SUFFIX,githubcopilot.com
 DOMAIN-SUFFIX,collector.github.com
 DOMAIN,copilot-telemetry-service.githubusercontent.com
 DOMAIN,copilot-telemetry.githubusercontent.com
