@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: Microsoft
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.list
-# Updated: 2026-09-06 05:49:00 CST
+# Updated: 2026-09-07 05:51:50 CST
 #
 DOMAIN,img-prod-cms-rt-microsoft-com.akamaized.net
 DOMAIN,img-s-msn-com.akamaized.net
@@ -60,8 +60,8 @@ DOMAIN,mscrl.microsoft.com
 DOMAIN,ocsp.microsoft.com
 DOMAIN,oneocsp.microsoft.com
 DOMAIN,www.microsoft.com
-DOMAIN,prodforza.blob.core.windows.net
 DOMAIN,flightsimulator.azureedge.net
+DOMAIN,prodforza.blob.core.windows.net
 DOMAIN,azure.microsoft.com
 DOMAIN,azuremarketplace.microsoft.com
 DOMAIN,location.microsoft.com
@@ -453,6 +453,14 @@ DOMAIN-SUFFIX,xboxplayanywhere.com
 DOMAIN-SUFFIX,xboxservices.com
 DOMAIN-SUFFIX,xboxstudios.com
 DOMAIN-SUFFIX,xbx.lv
+DOMAIN-SUFFIX,asobostudio.com
+DOMAIN-SUFFIX,flightsimulator.com
+DOMAIN-SUFFIX,beth.games
+DOMAIN-SUFFIX,bethesda.net
+DOMAIN-SUFFIX,bethesdagamestudios.com
+DOMAIN-SUFFIX,bethsoft.com
+DOMAIN-SUFFIX,doom.com
+DOMAIN-SUFFIX,elderscrolls.com
 DOMAIN-SUFFIX,forza.net
 DOMAIN-SUFFIX,forzamotorsport.net
 DOMAIN-SUFFIX,forzaracingchampionship.com
@@ -463,14 +471,6 @@ DOMAIN-SUFFIX,minecraft.net
 DOMAIN-SUFFIX,minecraftservices.com
 DOMAIN-SUFFIX,minecraftshop.com
 DOMAIN-SUFFIX,mojang.com
-DOMAIN-SUFFIX,asobostudio.com
-DOMAIN-SUFFIX,flightsimulator.com
-DOMAIN-SUFFIX,beth.games
-DOMAIN-SUFFIX,bethesda.net
-DOMAIN-SUFFIX,bethesdagamestudios.com
-DOMAIN-SUFFIX,bethsoft.com
-DOMAIN-SUFFIX,doom.com
-DOMAIN-SUFFIX,elderscrolls.com
 DOMAIN-SUFFIX,microsoft.be
 DOMAIN-SUFFIX,aadrm.com
 DOMAIN-SUFFIX,azure-api.net
