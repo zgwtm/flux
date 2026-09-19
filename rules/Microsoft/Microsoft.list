@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: Microsoft
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.list
-# Updated: 2026-09-19 06:06:28 CST
+# Updated: 2026-09-20 05:58:20 CST
 #
 DOMAIN,img-prod-cms-rt-microsoft-com.akamaized.net
 DOMAIN,img-s-msn-com.akamaized.net
@@ -501,10 +501,10 @@ DOMAIN-SUFFIX,octocaptcha.com
 DOMAIN-SUFFIX,opensource.guide
 DOMAIN-SUFFIX,repo.new
 DOMAIN-SUFFIX,thegithubshop.com
-DOMAIN-SUFFIX,githubcopilot.com
 DOMAIN-SUFFIX,npm.community
 DOMAIN-SUFFIX,npmjs.com
 DOMAIN-SUFFIX,npmjs.org
+DOMAIN-SUFFIX,githubcopilot.com
 DOMAIN-SUFFIX,adaptivecards.io
 DOMAIN-SUFFIX,api-extractor.com
 DOMAIN-SUFFIX,apisof.net
