@@ -52,6 +52,15 @@ rules:
     paths:
       - geo/geosite/google-gemini.list
 
+  # AI 其他 = 上游 AI 大集合 + 我们自己补充的 AI 服务（2026-09-27 起）
+  #   补充写在 rules/AIOther/custom.list：没有单列策略组的 AI 服务都加在那里；
+  #   多家 AI 共用的第三方零件（遥测、登录等）不放这里，放 rules/_global/ai-common
+  - name: AIOther
+    description: AI 其他（category-ai-!cn + 自家补充）
+    upstream: metacubex
+    paths:
+      - geo/geosite/category-ai-!cn.list
+
   # ---- 常用服务 ----
 
   - name: Google
