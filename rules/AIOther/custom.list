@@ -1,0 +1,7 @@
+# Mokka 酱的 AI 其他补充规则
+# 用途：没有单列策略组的 AI 服务，接在上游 category-ai-!cn 后面，一起走「AI 其他」
+# 注意：多家 AI 共用的第三方零件（遥测、登录等）不放这里，放 rules/_global/ai-common
+
+# Muse（主站认证／会话 + 会话网关）
+DOMAIN-SUFFIX,muse.ai
+DOMAIN-SUFFIX,metaaivm.com
