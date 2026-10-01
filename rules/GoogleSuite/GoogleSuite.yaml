@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: 谷歌全家桶
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google-gemini.list + https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.list + https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.list
-# Updated: 2026-10-01 07:21:06 CST
+# Updated: 2026-10-02 07:35:30 CST
 #
 payload:
   - DOMAIN,ai.google.dev
@@ -247,10 +247,6 @@ payload:
   - DOMAIN,firebaselogging.googleapis.com
   - DOMAIN,firebaseperusertopics-pa.googleapis.com
   - DOMAIN,firebaseremoteconfig.googleapis.com
-  - DOMAIN,publicca.googleapis.com
-  - DOMAIN,preprod-publicca.googleapis.com
-  - DOMAIN,clients1.google.com
-  - DOMAIN,pki.google.com
   - DOMAIN,android.googlesource.com
   - DOMAIN,scholar.google.ae
   - DOMAIN,scholar.google.at
@@ -328,6 +324,10 @@ payload:
   - DOMAIN,scholar.google.sk
   - DOMAIN,scholar.googleusercontent.com
   - DOMAIN,scholar.l.google.com
+  - DOMAIN,publicca.googleapis.com
+  - DOMAIN,preprod-publicca.googleapis.com
+  - DOMAIN,clients1.google.com
+  - DOMAIN,pki.google.com
   - DOMAIN-SUFFIX,chrome
   - DOMAIN-SUFFIX,dclk
   - DOMAIN-SUFFIX,gbiz
@@ -369,14 +369,6 @@ payload:
   - DOMAIN-SUFFIX,google.cz
   - DOMAIN-SUFFIX,google.de
   - DOMAIN-SUFFIX,google.dj
-  - DOMAIN-SUFFIX,v8project.org
-  - DOMAIN-SUFFIX,v8.dev
-  - DOMAIN-SUFFIX,opensourceinsights.dev
-  - DOMAIN-SUFFIX,opensourceinsight.dev
-  - DOMAIN-SUFFIX,deps.info
-  - DOMAIN-SUFFIX,deps.dev
-  - DOMAIN-SUFFIX,fastlane.tools
-  - DOMAIN-SUFFIX,fastlane.ci
   - DOMAIN-SUFFIX,xn--p8j9a0d9c9a.xn--q9jyb4c
   - DOMAIN-SUFFIX,new.day
   - DOMAIN-SUFFIX,iam.soy
@@ -391,9 +383,6 @@ payload:
   - DOMAIN-SUFFIX,charlestonroadregistry.com
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com
   - DOMAIN-SUFFIX,googleplay.com
-  - DOMAIN-SUFFIX,androidify.com
-  - DOMAIN-SUFFIX,android.com
-  - DOMAIN-SUFFIX,google.ad
   - DOMAIN-SUFFIX,slides.new
   - DOMAIN-SUFFIX,sheets.new
   - DOMAIN-SUFFIX,google.dk
@@ -686,7 +675,8 @@ payload:
   - DOMAIN-SUFFIX,schemer.com
   - DOMAIN-SUFFIX,screenwisetrends.com
   - DOMAIN-SUFFIX,screenwisetrendspanel.com
-  - DOMAIN-SUFFIX,dartlang.org
+  - DOMAIN-SUFFIX,google.am
+  - DOMAIN-SUFFIX,crashlytics.com
   - DOMAIN-SUFFIX,solveforx.com
   - DOMAIN-SUFFIX,stadia.dev
   - DOMAIN-SUFFIX,stcroixmosquito.com
@@ -744,10 +734,6 @@ payload:
   - DOMAIN-SUFFIX,xn--gogl-1nd42e.com
   - DOMAIN-SUFFIX,xplr.co
   - DOMAIN-SUFFIX,zukunftswerkstatt.de
-  - DOMAIN-SUFFIX,kaggle.com
-  - DOMAIN-SUFFIX,kaggle.io
-  - DOMAIN-SUFFIX,kaggle.net
-  - DOMAIN-SUFFIX,kaggleusercontent.com
   - DOMAIN-SUFFIX,blogspot.nl
   - DOMAIN-SUFFIX,blogspot.mx
   - DOMAIN-SUFFIX,blogspot.ae
@@ -803,16 +789,35 @@ payload:
   - DOMAIN-SUFFIX,blogspot.fi
   - DOMAIN-SUFFIX,blogspot.md
   - DOMAIN-SUFFIX,blogspot.mk
-  - DOMAIN-SUFFIX,google.am
   - DOMAIN-SUFFIX,dart.dev
-  - DOMAIN-SUFFIX,snapseed.com
+  - DOMAIN-SUFFIX,dartlang.org
   - DOMAIN-SUFFIX,dartpad.dev
-  - DOMAIN-SUFFIX,crashlytics.com
+  - DOMAIN-SUFFIX,fastlane.ci
+  - DOMAIN-SUFFIX,fastlane.tools
+  - DOMAIN-SUFFIX,snapseed.com
   - DOMAIN-SUFFIX,firebase.com
   - DOMAIN-SUFFIX,firebase.dev
   - DOMAIN-SUFFIX,firebase.io
   - DOMAIN-SUFFIX,firebaseapp.com
   - DOMAIN-SUFFIX,firebaseio.com
+  - DOMAIN-SUFFIX,kaggle.com
+  - DOMAIN-SUFFIX,kaggle.io
+  - DOMAIN-SUFFIX,kaggle.net
+  - DOMAIN-SUFFIX,kaggleusercontent.com
+  - DOMAIN-SUFFIX,deps.dev
+  - DOMAIN-SUFFIX,deps.info
+  - DOMAIN-SUFFIX,opensourceinsight.dev
+  - DOMAIN-SUFFIX,opensourceinsights.dev
+  - DOMAIN-SUFFIX,polymer-project.org
+  - DOMAIN-SUFFIX,polymerproject.org
+  - DOMAIN-SUFFIX,v8.dev
+  - DOMAIN-SUFFIX,v8project.org
+  - DOMAIN-SUFFIX,google.ae
+  - DOMAIN-SUFFIX,android.com
+  - DOMAIN-SUFFIX,androidify.com
+  - DOMAIN-SUFFIX,flutter.dev
+  - DOMAIN-SUFFIX,flutterapp.com
+  - DOMAIN-SUFFIX,pub.dev
   - DOMAIN-SUFFIX,go-lang.com
   - DOMAIN-SUFFIX,go-lang.net
   - DOMAIN-SUFFIX,go-lang.org
@@ -821,13 +826,10 @@ payload:
   - DOMAIN-SUFFIX,golang.com
   - DOMAIN-SUFFIX,golang.net
   - DOMAIN-SUFFIX,golang.org
-  - DOMAIN-SUFFIX,polymer-project.org
-  - DOMAIN-SUFFIX,polymerproject.org
-  - DOMAIN-SUFFIX,flutter.dev
-  - DOMAIN-SUFFIX,flutterapp.com
-  - DOMAIN-SUFFIX,pub.dev
-  - DOMAIN-SUFFIX,google.ae
-  - DOMAIN-SUFFIX,google.com.py
+  - DOMAIN-SUFFIX,google.ad
+  - DOMAIN-SUFFIX,blogspot.com.br
+  - DOMAIN-SUFFIX,google.co.ao
+  - DOMAIN-SUFFIX,blogspot.co.at
   - DOMAIN-SUFFIX,blogspot.co.id
   - DOMAIN-SUFFIX,blogspot.co.il
   - DOMAIN-SUFFIX,blogspot.co.ke
@@ -846,7 +848,6 @@ payload:
   - DOMAIN-SUFFIX,blogspot.com.mt
   - DOMAIN-SUFFIX,blogspot.com.ng
   - DOMAIN-SUFFIX,blogspot.com.co
-  - DOMAIN-SUFFIX,blogspot.com.br
   - DOMAIN-SUFFIX,womenwill.com.br
   - DOMAIN-SUFFIX,thinkquarterly.co.uk
   - DOMAIN-SUFFIX,howtogetmo.co.uk
@@ -864,6 +865,7 @@ payload:
   - DOMAIN-SUFFIX,google.com.sb
   - DOMAIN-SUFFIX,google.com.sa
   - DOMAIN-SUFFIX,google.com.qa
+  - DOMAIN-SUFFIX,google.com.py
   - DOMAIN-SUFFIX,google.com.pr
   - DOMAIN-SUFFIX,google.com.pk
   - DOMAIN-SUFFIX,google.com.ph
@@ -892,12 +894,9 @@ payload:
   - DOMAIN-SUFFIX,google.com.et
   - DOMAIN-SUFFIX,google.com.eg
   - DOMAIN-SUFFIX,google.com.ec
-  - DOMAIN-SUFFIX,blogspot.co.at
-  - DOMAIN-SUFFIX,google.co.ao
-  - DOMAIN-SUFFIX,google.co.bw
   - DOMAIN-SUFFIX,google.com.do
   - DOMAIN-SUFFIX,google.com.cy
-  - DOMAIN-SUFFIX,google.com.cu
+  - DOMAIN-SUFFIX,google.co.vi
   - DOMAIN-SUFFIX,google.com.co
   - DOMAIN-SUFFIX,google.com.bz
   - DOMAIN-SUFFIX,google.com.br
@@ -910,15 +909,17 @@ payload:
   - DOMAIN-SUFFIX,google.com.ai
   - DOMAIN-SUFFIX,google.com.ag
   - DOMAIN-SUFFIX,google.com.af
-  - DOMAIN-SUFFIX,google.co.zw
-  - DOMAIN-SUFFIX,google.co.zm
-  - DOMAIN-SUFFIX,google.co.za
-  - DOMAIN-SUFFIX,google.co.vi
+  - DOMAIN-SUFFIX,google.com.cu
   - DOMAIN-SUFFIX,google.co.ve
   - DOMAIN-SUFFIX,google.co.uz
   - DOMAIN-SUFFIX,google.co.uk
   - DOMAIN-SUFFIX,google.co.ug
   - DOMAIN-SUFFIX,google.co.tz
+  - DOMAIN-SUFFIX,google.co.za
+  - DOMAIN-SUFFIX,google.co.zw
+  - DOMAIN-SUFFIX,google.co.zm
+  - DOMAIN-SUFFIX,google.co.bw
+  - DOMAIN-SUFFIX,google.co.ck
   - DOMAIN-SUFFIX,google.co.th
   - DOMAIN-SUFFIX,google.co.nz
   - DOMAIN-SUFFIX,google.co.mz
@@ -928,7 +929,6 @@ payload:
   - DOMAIN-SUFFIX,google.co.ke
   - DOMAIN-SUFFIX,google.co.jp
   - DOMAIN-SUFFIX,google.co.in
-  - DOMAIN-SUFFIX,google.co.ck
   - DOMAIN-SUFFIX,google.co.il
   - DOMAIN-SUFFIX,google.co.id
   - DOMAIN-SUFFIX,google.co.cr
