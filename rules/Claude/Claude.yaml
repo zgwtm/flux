@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: Claude
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/anthropic.list
-# Updated: 2026-08-09 17:33:57 CST
+# Updated: 2026-10-04 06:33:41 CST
 #
 payload:
   - DOMAIN,servd-anthropic-website.b-cdn.net
@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,clau.de
   - DOMAIN-SUFFIX,claude.ai
   - DOMAIN-SUFFIX,claude.com
+  - DOMAIN-SUFFIX,claude.dev
   - DOMAIN-SUFFIX,claudemcpclient.com
   - DOMAIN-SUFFIX,claudemcpcontent.com
   - DOMAIN-SUFFIX,claudeusercontent.com
