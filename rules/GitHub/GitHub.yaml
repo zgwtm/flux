@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: GitHub
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.list
-# Updated: 2026-10-09 08:03:57 CST
+# Updated: 2026-10-10 07:44:02 CST
 #
 payload:
   - DOMAIN,github-api.arkoselabs.com
@@ -65,6 +65,7 @@ payload:
   - DOMAIN-SUFFIX,npmjs.com
   - DOMAIN-SUFFIX,npmjs.org
   - DOMAIN-SUFFIX,githubcopilot.com
+  - DOMAIN-SUFFIX,cafe.github.com
   - DOMAIN-SUFFIX,collector.github.com
   - DOMAIN,copilot-telemetry-service.githubusercontent.com
   - DOMAIN,copilot-telemetry.githubusercontent.com
