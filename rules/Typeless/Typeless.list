@@ -1,0 +1,4 @@
+# Typeless 语音输入（Loon 格式）
+# 手工维护：上游 MetaCubeX 没有 typeless 分类，不进 config.yaml，自动同步不会改它
+DOMAIN-SUFFIX,typeless.com
+DOMAIN-SUFFIX,typeless-static.com
