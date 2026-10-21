@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: OpenAI
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.list
-# Updated: 2026-10-19 06:06:11 CST
+# Updated: 2026-10-22 06:55:14 CST
 #
 payload:
   - DOMAIN,openaiapi-site.azureedge.net
@@ -26,6 +26,7 @@ payload:
   - DOMAIN-SUFFIX,openai.com.cdn.cloudflare.net
   - DOMAIN,browser-intake-datadoghq.com
   - DOMAIN,o33249.ingest.sentry.io
+  - DOMAIN,o33249.ingest.us.sentry.io
   - DOMAIN,openai.qualtrics.com
   - DOMAIN-SUFFIX,client-api.arkoselabs.com
   - DOMAIN,openai-api.arkoselabs.com
