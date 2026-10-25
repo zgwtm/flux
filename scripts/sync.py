@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-规则同步脚本
-从上游拉取规则 → 合并自定义补充 → 输出 .list / .yaml 两种格式
-默认按规则名分文件夹；配置 slug 后按 slug 分文件夹：rules/{slug}/
+Merge upstream and custom rules into Loon and Clash/Mihomo rule sets.
+Output paths use rules/{slug}/, with the rule name as the default slug.
 """
 
 import argparse
@@ -58,11 +57,9 @@ UPDATED_LINE_PATTERN = re.compile(r"^# Updated: .*$", re.MULTILINE)
 
 
 def content_fingerprint(content):
-    """比较用指纹：抹掉同步头里的时间戳之后再算哈希。
+    """Ignore generated timestamps when comparing content.
 
-    add_sync_header() 每次都会写入当前时间，直接比较全文的话哈希永远不相等，
-    于是每天都会重写全部文件，产生一个只有 Updated 行变化的空提交。
-    只忽略时间戳，Source、Rule 等其它头部信息变了仍然算内容变化。
+    Other header changes still count, so source and rule metadata stay current.
     """
     return file_md5(UPDATED_LINE_PATTERN.sub("# Updated: -", content))
 
@@ -109,19 +106,19 @@ def read_custom_rules(name):
 def append_custom_to_loon(loon_content, custom_rules):
     separator = (
         "\n"
-        "# ========== Mokka 的补充规则 ==========\n"
+        "# Custom rules\n"
     )
     return loon_content.rstrip("\n") + separator + "\n".join(custom_rules) + "\n"
 
 
 def append_custom_to_clash(clash_content, custom_rules):
-    separator = "  # ========== Mokka 的补充规则 ==========\n"
+    separator = "  # Custom rules\n"
     custom_lines = "\n".join(f"  - {rule}" for rule in custom_rules)
     return clash_content.rstrip("\n") + "\n" + separator + custom_lines + "\n"
 
 
 def extract_clash_rules(content):
-    """从 Clash payload(yaml) 内容里提取纯规则行，丢掉注释和 'payload:' 头。"""
+    """Extract rules from a Clash payload, omitting comments and its header."""
     rules = []
     for line in content.splitlines():
         s = line.strip()
@@ -134,7 +131,7 @@ def extract_clash_rules(content):
 
 
 def extract_loon_rules(content):
-    """从 Loon(.list) 内容里提取纯规则行，丢掉注释和空行。"""
+    """Extract Loon rules, omitting comments and blank lines."""
     rules = []
     for line in content.splitlines():
         s = line.strip()
@@ -145,15 +142,9 @@ def extract_loon_rules(content):
 
 
 def extract_metacubex_rules(content):
-    """MetaCubeX geosite 的 .list → 标准规则行。
+    """Convert MetaCubeX geosite entries into rules shared by both formats.
 
-    该格式只有两种写法（2026-08-09 抽样 8 个分类共 2827 条确认，无第三种）：
-        +.example.com  →  DOMAIN-SUFFIX,example.com
-        example.com    →  DOMAIN,example.com
-
-    产出的规则行 Loon 与 Clash 通用，差别只在外层包装（.list 直接列，
-    .yaml 包一层 payload）——这正是「两端同源」能成立的原因：
-    同一份源文件、同一次转换，两个格式的内容不可能对不上。
+    Prefix '+.' becomes DOMAIN-SUFFIX; other entries become DOMAIN rules.
     """
     rules = []
     for line in content.splitlines():
@@ -168,7 +159,7 @@ def extract_metacubex_rules(content):
 
 
 def write_if_changed(path, content, label, rule_count, source_count, stats):
-    """内容有变才写盘；只有时间戳变化不算变化。"""
+    """Write only substantive changes, ignoring generated timestamps."""
     existing = read_existing(path)
     if existing and content_fingerprint(existing) == content_fingerprint(content):
         print(f"  {label} unchanged")
@@ -180,7 +171,7 @@ def write_if_changed(path, content, label, rule_count, source_count, stats):
 
 
 def dedup_preserve(seq):
-    """去重，但保留首次出现的顺序。"""
+    """Remove duplicates while preserving first-seen order."""
     seen = set()
     out = []
     for x in seq:
@@ -191,7 +182,7 @@ def dedup_preserve(seq):
 
 
 def resolve_rule_slug(rule):
-    """返回规则的文件标识；slug 仅允许单个安全路径片段。"""
+    """Resolve the output slug, which must be a single safe path component."""
     name = rule["name"]
     slug = rule.get("slug", name)
     if not isinstance(slug, str) or not slug.strip() or slug != slug.strip():
@@ -207,8 +198,10 @@ def resolve_rule_slug(rule):
 
 
 def download_and_merge(repo, branch, paths, fmt):
-    """下载多个上游路径并按 fmt('clash'/'loon') 提取规则后合并。
-    任一路径下载失败返回 (None, [])；否则返回 (rules_list, source_urls)。"""
+    """Download and merge sources in the requested format.
+
+    Return (rules, source_urls), or (None, []) if any source download fails.
+    """
     all_rules = []
     sources = []
     for p in paths:
@@ -279,11 +272,8 @@ def sync_rules(only=None):
 
         custom_rules = read_custom_rules(slug)
 
-        # ── MetaCubeX 统一源（2026-08-09 起的主路径）──────────────────
-        # 下载一次，同时产出 .list（Loon）与 .yaml（Clash）。
-        # 两端拿到的是同一批规则、同一次去重、同一份 custom，
-        # 所以【两端内容必然一致】——不再需要事后对账。
-        # 旧的 loon_path / clash_path 分支保留在下方，暂未使用。
+        # Generate both formats from one merged, deduplicated source sequence.
+        # Legacy format-specific sources are handled below.
         mc_paths = rule.get("paths")
         if mc_paths:
             merged, sources = download_and_merge(repo, branch, mc_paths, "metacubex")
@@ -308,7 +298,7 @@ def sync_rules(only=None):
             )
             continue
 
-        # Loon → rules/{slug}/{slug}.list
+        # Legacy Loon sources.
         loon_out = os.path.join(rule_dir, f"{slug}.list")
         loon_paths = rule.get("loon_paths")
         loon_path = rule.get("loon_path")
@@ -346,7 +336,7 @@ def sync_rules(only=None):
             else:
                 stats["failed"] += 1
 
-        # Clash/Mihomo → rules/{slug}/{slug}.yaml
+        # Legacy Clash/Mihomo sources.
         clash_out = os.path.join(rule_dir, f"{slug}.yaml")
         clash_paths = rule.get("clash_paths")
         clash_path = rule.get("clash_path")
@@ -393,11 +383,11 @@ def sync_rules(only=None):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="同步规则集")
+    parser = argparse.ArgumentParser(description="Synchronize rule sets")
     parser.add_argument(
         "--only",
         metavar="NAME_OR_SLUG",
-        help="只同步指定的规则显示名或 slug",
+        help="sync only the specified rule display name or slug",
     )
     return parser.parse_args()
 

@@ -3,14 +3,14 @@ __pycache__/
 .DS_Store
 .env
 
-# CMFA 配置明文（绝对不能推到 GitHub）
+# Keep plaintext client configurations out of version control.
 configs/cmfa/*.yml
 configs/cmfa/*.yaml
 !configs/cmfa/*.age
 cmfa*.yml
 
-# 公钥文件（本地保存，不同步）
+# Keep local key files out of version control.
 configs/cmfa/keys/
 
-# 工具二进制文件
+# Local tool binaries.
 tools/
