@@ -1,9 +1,8 @@
 # Synced by flux-rules
 # Rule: Netflix
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.list
-# Updated: 2026-08-09 17:33:58 CST
+# Updated: 2026-10-28 07:23:29 CST
 #
-DOMAIN,netflix.com.edgesuite.net
 DOMAIN-SUFFIX,fast.com
 DOMAIN-SUFFIX,netflix.ca
 DOMAIN-SUFFIX,netflix.com
@@ -27,3 +26,4 @@ DOMAIN-SUFFIX,netflixdnstest7.com
 DOMAIN-SUFFIX,netflixdnstest8.com
 DOMAIN-SUFFIX,netflixdnstest9.com
 DOMAIN-SUFFIX,netflixdnstest10.com
+DOMAIN-SUFFIX,netflix.com.edgesuite.net
