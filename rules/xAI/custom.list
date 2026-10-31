@@ -1,0 +1,12 @@
+# Grok Bot entry point; currently redirects to https://x.ai/bot.
+DOMAIN-SUFFIX,grokbot.com
+
+# Shared sign-in and content hosts documented at:
+# https://cursor.com/help/troubleshooting/sign-in-domains
+DOMAIN-SUFFIX,spacex.ai
+DOMAIN-SUFFIX,grokusercontent.com
+
+# Dedicated download bucket from Cursor's network documentation.
+# Do not match unrelated S3 buckets.
+# https://cursor.com/docs/enterprise/network-configuration
+DOMAIN,anysphere-binaries.s3.us-east-1.amazonaws.com

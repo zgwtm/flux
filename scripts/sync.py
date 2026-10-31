@@ -5,6 +5,7 @@ Output paths use rules/{slug}/, with the rule name as the default slug.
 """
 
 import argparse
+import ipaddress
 import os
 import re
 import sys
@@ -158,6 +159,22 @@ def extract_metacubex_rules(content):
     return rules
 
 
+def extract_metacubex_ip_rules(content):
+    """Convert a MetaCubeX geoip list into CIDR rules without DNS lookups."""
+    rules = []
+    for number, line in enumerate(content.splitlines(), 1):
+        entry = line.strip()
+        if not entry or entry.startswith("#"):
+            continue
+        try:
+            network = ipaddress.ip_network(entry, strict=True)
+        except ValueError as error:
+            raise ValueError(f"invalid geoip entry on line {number}") from error
+        rule_type = "IP-CIDR6" if network.version == 6 else "IP-CIDR"
+        rules.append(f"{rule_type},{network.with_prefixlen},no-resolve")
+    return rules
+
+
 def write_if_changed(path, content, label, rule_count, source_count, stats):
     """Write only substantive changes, ignoring generated timestamps."""
     existing = read_existing(path)
@@ -200,7 +217,7 @@ def resolve_rule_slug(rule):
 def download_and_merge(repo, branch, paths, fmt):
     """Download and merge sources in the requested format.
 
-    Return (rules, source_urls), or (None, []) if any source download fails.
+    Return (rules, source_urls), or (None, []) if a source fails or is empty.
     """
     all_rules = []
     sources = []
@@ -209,12 +226,23 @@ def download_and_merge(repo, branch, paths, fmt):
         content = download_file(url)
         if content is None:
             return None, []
-        if fmt == "clash":
-            all_rules += extract_clash_rules(content)
-        elif fmt == "metacubex":
-            all_rules += extract_metacubex_rules(content)
-        else:
-            all_rules += extract_loon_rules(content)
+        try:
+            if fmt == "clash":
+                extracted = extract_clash_rules(content)
+            elif fmt == "metacubex":
+                if p.startswith("geo/geoip/"):
+                    extracted = extract_metacubex_ip_rules(content)
+                else:
+                    extracted = extract_metacubex_rules(content)
+            else:
+                extracted = extract_loon_rules(content)
+        except ValueError as error:
+            print(f"  Invalid source {url}: {error}")
+            return None, []
+        if not extracted:
+            print(f"  Empty source: {url}")
+            return None, []
+        all_rules += extracted
         sources.append(url)
     return all_rules, sources
 

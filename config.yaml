@@ -27,6 +27,14 @@ rules:
     paths:
       - geo/geosite/google-gemini.list
 
+  - name: xAI
+    description: X, Grok, Cursor and Grok Bot services
+    upstream: metacubex
+    paths:
+      - geo/geosite/x.list
+      - geo/geosite/cursor.list
+      - geo/geoip/twitter.list
+
   # Other AI services; shared third-party infrastructure belongs in ai-common.
   - name: AIOther
     description: Other AI services and custom additions
