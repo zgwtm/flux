@@ -37,7 +37,7 @@ rules:
 
   - name: Meta AI
     slug: MetaAI
-    description: Meta AI, Muse, content delivery and account authentication
+    description: Meta AI, Muse, Meta accounts, Facebook and shared content
     source: local
 
   # Other AI services; shared third-party infrastructure belongs in ai-common.

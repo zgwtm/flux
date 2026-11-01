@@ -4,5 +4,10 @@ DOMAIN-SUFFIX,muse.ai
 DOMAIN-SUFFIX,metaaivm.com
 DOMAIN-SUFFIX,metaaiusercontent.com
 
-# Shared Meta account authentication, including its authentication subdomains.
-DOMAIN-SUFFIX,auth.meta.com
+# Shared Meta account and Graph services, including authentication.
+DOMAIN-SUFFIX,meta.com
+
+# Facebook and shared Meta content delivery.
+DOMAIN-SUFFIX,facebook.com
+DOMAIN-SUFFIX,fbcdn.net
+DOMAIN-SUFFIX,fbsbx.com

@@ -1,14 +1,31 @@
 # Meta AI
 
-Service rules for Meta AI, Muse, their connection and content domains, and Meta
-account authentication. The authentication suffix is shared with other Meta
-products; Facebook, Instagram, and shared CDN domains are not included wholesale.
+Rules for Meta AI, Muse, Meta account and Graph services, Facebook, and shared
+Meta content delivery. This set also routes matching traffic from other Meta
+products; its scope is broader than AI services alone.
+
+## Scope
+
+The maintained source contains eight domain suffixes:
+
+- AI services and content: `meta.ai`, `muse.ai`, `metaaivm.com`, and
+  `metaaiusercontent.com`.
+- Meta accounts and Graph services: `meta.com`, including `auth.meta.com`,
+  `accountscenter.meta.com`, and their subdomains.
+- Facebook and shared content delivery: `facebook.com`, `fbcdn.net`, and
+  `fbsbx.com`. This includes matching Facebook website and media traffic.
+
+Instagram-specific domains such as `instagram.com` and `cdninstagram.com` are
+not included. Shared Meta domains may still be used by Instagram or other products.
+
+## Generation
 
 `custom.list` is the single maintained source. The `source: local` configuration
 generates matching `MetaAI.list` (Loon) and `MetaAI.yaml` (Mihomo classical) files:
 
 ```sh
 python scripts/sync.py --only MetaAI
+python scripts/sync.py --only AIOther
 ```
 
 Load MetaAI before AI payment, shared infrastructure, and broad AI fallback rules.
