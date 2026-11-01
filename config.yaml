@@ -46,8 +46,8 @@ rules:
     upstream: metacubex
     paths:
       - geo/geosite/category-ai-!cn.list
-    # Enable after every affected client has subscribed to MetaAI:
-    # exclude_custom_from: [MetaAI]
+    # Keep dedicated Meta AI domains out of the broad fallback set.
+    exclude_custom_from: [MetaAI]
 
   # Common services.
   - name: Google

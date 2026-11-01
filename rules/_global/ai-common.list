@@ -1,4 +1,4 @@
-# Shared AI infrastructure and supplementary services (Loon).
+# Shared AI infrastructure (Loon).
 # Place after service-specific and payment rules, before broad AI fallbacks.
 # Assign a separate client policy for these shared dependencies.
 # Example: RULE-SET,ai-common,AI-Common
@@ -22,7 +22,3 @@ DOMAIN-SUFFIX,featuregates.org
 # Service-specific subdomains must match before these broader suffix rules.
 DOMAIN-SUFFIX,auth0.com
 DOMAIN-SUFFIX,identrust.com
-
-# Legacy Muse entries retained until affected clients subscribe to MetaAI.
-DOMAIN-SUFFIX,muse.ai
-DOMAIN-SUFFIX,metaaivm.com

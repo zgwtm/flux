@@ -14,19 +14,12 @@ python scripts/sync.py --only MetaAI
 Load MetaAI before AI payment, shared infrastructure, and broad AI fallback rules.
 The routing policy and its allowed outbound choices are configured by each client.
 
-## Migration
+## Routing ownership
 
-Existing Meta AI and Muse entries remain in AIOther and ai-common for clients that
-have not yet added this set. A client loading MetaAI earlier will already use its
-dedicated policy. After all affected clients have migrated:
+Clients using Meta AI or Muse must subscribe to this dedicated set. AIOther and
+ai-common do not provide compatibility entries for these services.
 
-1. Enable `exclude_custom_from: [MetaAI]` on the AIOther entry in `config.yaml`.
-   The synchronizer then excludes exact hosts and suffixes owned by this source,
-   including new upstream subdomains, without changing unrelated AI services.
-2. Remove the legacy Muse entries from `AIOther/custom.list` and both manually
-   maintained ai-common formats.
-3. Regenerate AIOther and verify both formats before publishing the cleanup.
-
-Do not activate the cleanup while older client configurations still rely on those
-entries. Empty or unsupported ownership sources stop generation and preserve the
-existing outputs.
+AIOther enables `exclude_custom_from: [MetaAI]` in `config.yaml`. During each sync,
+the synchronizer excludes exact hosts and suffixes owned by this source, including
+new upstream subdomains, without changing unrelated AI services. Empty or
+unsupported ownership sources stop generation and preserve the existing outputs.

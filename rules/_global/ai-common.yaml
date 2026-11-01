@@ -22,7 +22,3 @@ payload:
   # Service-specific subdomains must match before these broader suffix rules.
   - DOMAIN-SUFFIX,auth0.com
   - DOMAIN-SUFFIX,identrust.com
-
-  # Legacy Muse entries retained until affected clients subscribe to MetaAI.
-  - DOMAIN-SUFFIX,muse.ai
-  - DOMAIN-SUFFIX,metaaivm.com

@@ -1,7 +1,7 @@
 # Synced by flux-rules
 # Rule: AIOther
 # Source: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.list
-# Updated: 2026-11-01 10:27:17 CST
+# Updated: 2026-11-01 11:32:11 CST
 #
 payload:
   - DOMAIN,servd-anthropic-website.b-cdn.net
@@ -47,10 +47,6 @@ payload:
   - DOMAIN-SUFFIX,typesafe.ai
   - DOMAIN-SUFFIX,kimi.ai
   - DOMAIN-SUFFIX,moonshot.ai
-  - DOMAIN-SUFFIX,meta.ai
-  - DOMAIN-SUFFIX,metaaivm.com
-  - DOMAIN-SUFFIX,metaaiusercontent.com
-  - DOMAIN-SUFFIX,muse.ai
   - DOMAIN-SUFFIX,agentclientprotocol.com
   - DOMAIN-SUFFIX,anythingllm.com
   - DOMAIN-SUFFIX,arena.ai
