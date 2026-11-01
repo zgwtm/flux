@@ -35,12 +35,19 @@ rules:
       - geo/geosite/cursor.list
       - geo/geoip/twitter.list
 
+  - name: Meta AI
+    slug: MetaAI
+    description: Meta AI, Muse, content delivery and account authentication
+    source: local
+
   # Other AI services; shared third-party infrastructure belongs in ai-common.
   - name: AIOther
     description: Other AI services and custom additions
     upstream: metacubex
     paths:
       - geo/geosite/category-ai-!cn.list
+    # Enable after every affected client has subscribed to MetaAI:
+    # exclude_custom_from: [MetaAI]
 
   # Common services.
   - name: Google

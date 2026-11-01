@@ -111,5 +111,98 @@ class MixedSourceSyncTests(unittest.TestCase):
         self.assertEqual(self.output_bytes(), before)
 
 
+class LocalSourceAndOwnershipTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.meta_dir = self.root / "MetaAI"
+        self.meta_dir.mkdir()
+        self.meta_source = self.meta_dir / "custom.list"
+        self.meta_source.write_text(
+            "DOMAIN-SUFFIX,meta.ai\nDOMAIN-SUFFIX,muse.ai\n"
+            "DOMAIN-SUFFIX,metaaivm.com\nDOMAIN-SUFFIX,metaaiusercontent.com\n"
+            "DOMAIN-SUFFIX,auth.meta.com\nDOMAIN-SUFFIX,meta.ai\n"
+        )
+        self.other_dir = self.root / "AIOther"
+        self.other_dir.mkdir()
+        (self.other_dir / "custom.list").write_text("DOMAIN-SUFFIX,muse.ai\n")
+        self.upstream = (
+            "+.meta.ai\napi.meta.ai\n+.muse.ai\n+.metaaivm.com\n"
+            "+.metaaiusercontent.com\n+.notmeta.ai\n+.other.ai\n"
+            "+.meta.ai.unrelated.example\n"
+        )
+        self.other_config = {
+            "name": "AIOther", "upstream": "metacubex",
+            "paths": ["geo/geosite/category-ai-!cn.list"],
+        }
+        self.config = {
+            "upstream": {"metacubex": {"repo": "example/rules", "branch": "meta"}},
+            "rules": [
+                {"name": "Meta AI", "slug": "MetaAI", "source": "local"},
+                self.other_config,
+            ],
+        }
+
+    def run_sync(self, only):
+        with patch.object(sync, "RULES_DIR", str(self.root)), \
+                patch.object(sync, "load_config", return_value=self.config), \
+                patch.object(sync, "download_file", return_value=self.upstream) as download, \
+                contextlib.redirect_stdout(io.StringIO()):
+            sync.sync_rules(only)
+        return download
+
+    def output_bytes(self, slug):
+        return {suffix: (self.root / slug / (slug + "." + suffix)).read_bytes()
+                for suffix in ("list", "yaml")}
+
+    def payload(self, slug):
+        loon = sync.extract_loon_rules((self.root / slug / (slug + ".list")).read_text())
+        clash = yaml.safe_load((self.root / slug / (slug + ".yaml")).read_text())["payload"]
+        self.assertEqual(loon, clash)
+        return loon
+
+    def test_local_source_generates_both_formats_without_network(self):
+        download = self.run_sync("MetaAI")
+        download.assert_not_called()
+        self.assertEqual(self.payload("MetaAI"), [
+            "DOMAIN-SUFFIX,meta.ai", "DOMAIN-SUFFIX,muse.ai",
+            "DOMAIN-SUFFIX,metaaivm.com", "DOMAIN-SUFFIX,metaaiusercontent.com",
+            "DOMAIN-SUFFIX,auth.meta.com",
+        ])
+
+    def test_empty_local_source_preserves_published_outputs(self):
+        self.run_sync("MetaAI")
+        before = self.output_bytes("MetaAI")
+        self.meta_source.write_text("# temporarily empty\n")
+        with self.assertRaises(SystemExit):
+            self.run_sync("MetaAI")
+        self.assertEqual(self.output_bytes("MetaAI"), before)
+
+    def test_migration_is_opt_in_and_keeps_legacy_domains(self):
+        self.run_sync("AIOther")
+        self.assertEqual(self.payload("AIOther"),
+                         sync.extract_metacubex_rules(self.upstream))
+
+    def test_enabled_exclusion_removes_owned_domains_and_new_subdomains(self):
+        self.other_config["exclude_custom_from"] = ["MetaAI"]
+        self.run_sync("AIOther")
+        self.assertEqual(self.payload("AIOther"), [
+            "DOMAIN-SUFFIX,notmeta.ai", "DOMAIN-SUFFIX,other.ai",
+            "DOMAIN-SUFFIX,meta.ai.unrelated.example",
+        ])
+
+    def test_invalid_owner_preserves_both_fallback_outputs(self):
+        self.run_sync("AIOther")
+        before = self.output_bytes("AIOther")
+        self.other_config["exclude_custom_from"] = ["MetaAI"]
+        for source in ["# empty\n", "IP-CIDR,192.0.2.0/24,no-resolve\n"]:
+            with self.subTest(source=source):
+                self.meta_source.write_text(source)
+                with self.assertRaises(SystemExit):
+                    self.run_sync("AIOther")
+                self.assertEqual(self.output_bytes("AIOther"), before)
+
+
 if __name__ == "__main__":
     unittest.main()

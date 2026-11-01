@@ -1,6 +1,6 @@
 # Additional AI services without a dedicated rule set.
 # Shared third-party infrastructure belongs in rules/_global/ai-common.
 
-# Muse authentication, sessions and gateway.
+# Legacy Muse entries retained until affected clients subscribe to MetaAI.
 DOMAIN-SUFFIX,muse.ai
 DOMAIN-SUFFIX,metaaivm.com

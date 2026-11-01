@@ -1,6 +1,6 @@
 # Shared AI infrastructure and supplementary services (Mihomo / Clash classical).
 # Place after service-specific and payment rules, before broad AI fallbacks.
-# Route these shared dependencies through the same egress as Claude.
+# Assign a separate client policy for these shared dependencies.
 # Example: RULE-SET,ai-common,AI-Common
 payload:
   # Search.
@@ -23,6 +23,6 @@ payload:
   - DOMAIN-SUFFIX,auth0.com
   - DOMAIN-SUFFIX,identrust.com
 
-  # Muse.
+  # Legacy Muse entries retained until affected clients subscribe to MetaAI.
   - DOMAIN-SUFFIX,muse.ai
   - DOMAIN-SUFFIX,metaaivm.com

@@ -247,6 +247,60 @@ def download_and_merge(repo, branch, paths, fmt):
     return all_rules, sources
 
 
+def exclude_owned_domains(rule, rules):
+    """Optionally exclude domains owned by another set's custom source.
+
+    A suffix owner also covers exact hosts and narrower suffixes below it.
+    Missing or unsupported ownership sources fail before either output changes.
+    """
+    owners = rule.get("exclude_custom_from", [])
+    if not isinstance(owners, list):
+        raise ValueError("exclude_custom_from must be a list of rule slugs")
+    exact, suffixes = set(), set()
+    for owner in owners:
+        slug = resolve_rule_slug({"name": owner})
+        entries = read_custom_rules(slug)
+        if not entries:
+            raise ValueError(f"empty or missing ownership source: {slug}/custom.list")
+        for entry in entries:
+            fields = entry.split(",")
+            if (len(fields) != 2 or fields[0] not in ("DOMAIN", "DOMAIN-SUFFIX")
+                    or not fields[1].strip()):
+                raise ValueError(f"unsupported domain ownership rule in {slug}")
+            domain = fields[1].strip().lower().rstrip(".")
+            (exact if fields[0] == "DOMAIN" else suffixes).add(domain)
+
+    filtered = []
+    for entry in rules:
+        fields = entry.split(",")
+        if len(fields) >= 2 and fields[0] in ("DOMAIN", "DOMAIN-SUFFIX"):
+            domain = fields[1].strip().lower().rstrip(".")
+            owned = (fields[0] == "DOMAIN" and domain in exact) or any(
+                domain == suffix or domain.endswith("." + suffix)
+                for suffix in suffixes
+            )
+            if owned:
+                continue
+        filtered.append(entry)
+    if not filtered:
+        raise ValueError("rule set is empty after domain ownership exclusions")
+    return filtered
+
+
+def write_rule_pair(rule_dir, slug, name, source_label, rules, stats):
+    """Render both client formats from the same ordered rule sequence."""
+    bodies = {
+        "list": "\n".join(rules) + "\n",
+        "yaml": "payload:\n" + "\n".join(f"  - {r}" for r in rules) + "\n",
+    }
+    for suffix, body in bodies.items():
+        write_if_changed(
+            os.path.join(rule_dir, f"{slug}.{suffix}"),
+            add_sync_header(body, name, source_label),
+            f".{suffix}", len(rules), 1, stats,
+        )
+
+
 def sync_rules(only=None):
     config = load_config()
     upstream_configs = config.get("upstream", {})
@@ -282,6 +336,29 @@ def sync_rules(only=None):
 
     for rule, slug in resolved_rules:
         name = rule["name"]
+        if rule.get("exclude_custom_from") and not (
+                rule.get("paths") or rule.get("source") == "local"):
+            print(f"\n[{name}] exclusions require local or MetaCubeX sources")
+            stats["failed"] += 1
+            continue
+
+        if rule.get("source") == "local":
+            print(f"\n[{name}] {rule.get('description', '')}")
+            try:
+                merged = dedup_preserve(read_custom_rules(slug))
+                if not merged:
+                    raise ValueError("local custom source is empty or missing")
+                merged = exclude_owned_domains(rule, merged)
+            except ValueError as error:
+                print(f"  Invalid local source: {error}")
+                stats["failed"] += 1
+                continue
+            write_rule_pair(
+                os.path.join(RULES_DIR, slug), slug, name,
+                f"rules/{slug}/custom.list", merged, stats,
+            )
+            continue
+
         upstream_name = rule["upstream"]
         upstream_cfg = upstream_configs.get(upstream_name)
 
@@ -309,6 +386,12 @@ def sync_rules(only=None):
                 stats["failed"] += 1
                 continue
             merged = dedup_preserve(merged + custom_rules)
+            try:
+                merged = exclude_owned_domains(rule, merged)
+            except ValueError as error:
+                print(f"  Invalid ownership exclusion: {error}")
+                stats["failed"] += 1
+                continue
             source_label = " + ".join(sources)
 
             loon_body = "\n".join(merged) + "\n"

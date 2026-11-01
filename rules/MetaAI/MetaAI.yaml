@@ -1,0 +1,11 @@
+# Synced by flux-rules
+# Rule: Meta AI
+# Source: rules/MetaAI/custom.list
+# Updated: 2026-11-01 10:24:38 CST
+#
+payload:
+  - DOMAIN-SUFFIX,meta.ai
+  - DOMAIN-SUFFIX,muse.ai
+  - DOMAIN-SUFFIX,metaaivm.com
+  - DOMAIN-SUFFIX,metaaiusercontent.com
+  - DOMAIN-SUFFIX,auth.meta.com
