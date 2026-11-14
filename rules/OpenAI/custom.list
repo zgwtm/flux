@@ -1,0 +1,16 @@
+DOMAIN-SUFFIX,sora.com
+DOMAIN-SUFFIX,chat.com
+DOMAIN-SUFFIX,chatgpt.site
+DOMAIN-SUFFIX,oaistatsig.com
+DOMAIN-SUFFIX,crixet.com
+DOMAIN,openaiassets.blob.core.windows.net
+DOMAIN,openai.qualtrics.com
+DOMAIN-SUFFIX,client-api.arkoselabs.com
+DOMAIN,openai-api.arkoselabs.com
+DOMAIN-SUFFIX,ai.com
+DOMAIN-KEYWORD,openai
+IP-CIDR,57.154.22.182/32,no-resolve
+IP-CIDR,57.154.51.173/32,no-resolve
+IP-CIDR,40.118.236.137/32,no-resolve
+IP-CIDR,20.168.48.117/32,no-resolve
+IP-CIDR,4.155.146.196/32,no-resolve

@@ -1,0 +1,11 @@
+payload:
+- DOMAIN-SUFFIX,algolia.net
+- DOMAIN-SUFFIX,sentry.io
+- DOMAIN-SUFFIX,segment.io
+- DOMAIN-SUFFIX,observeit.net
+- DOMAIN-SUFFIX,api.statsig.com
+- DOMAIN,static.cloudflareinsights.com
+- DOMAIN-SUFFIX,launchdarkly.com
+- DOMAIN-SUFFIX,featuregates.org
+- DOMAIN-SUFFIX,auth0.com
+- DOMAIN-SUFFIX,identrust.com

@@ -1,0 +1,2 @@
+AND,((DEST-PORT,3478),(NOT,((DOMAIN,edge-stun.facebook.com))),(NOT,((DOMAIN,meta-ai-realtime.facebook.com))),(NOT,((IP-CIDR,57.154.22.182/32,no-resolve))),(NOT,((IP-CIDR,57.154.51.173/32,no-resolve))),(NOT,((IP-CIDR,40.118.236.137/32,no-resolve))),(NOT,((IP-CIDR,20.168.48.117/32,no-resolve))),(NOT,((IP-CIDR,4.155.146.196/32,no-resolve))))
+DEST-PORT,19302
