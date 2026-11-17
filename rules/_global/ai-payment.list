@@ -1,2 +1,11 @@
 DOMAIN-SUFFIX,stripe.com
 DOMAIN-SUFFIX,stripe.network
+DOMAIN-SUFFIX,link.com
+DOMAIN-SUFFIX,link.co
+DOMAIN-SUFFIX,onelink.com
+DOMAIN-SUFFIX,stripecdn.com
+DOMAIN-SUFFIX,stripeassets.com
+DOMAIN,stripe-images.s3.amazonaws.com
+DOMAIN,stripe-images.s3.us-west-1.amazonaws.com
+DOMAIN,stripe-camo.global.ssl.fastly.net
+DOMAIN,d1wqzb5bdbcre6.cloudfront.net

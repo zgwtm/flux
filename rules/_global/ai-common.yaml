@@ -9,3 +9,4 @@ payload:
 - DOMAIN-SUFFIX,featuregates.org
 - DOMAIN-SUFFIX,auth0.com
 - DOMAIN-SUFFIX,identrust.com
+- DOMAIN-SUFFIX,hcaptcha.com
